@@ -1,6 +1,11 @@
-.vscode
-coverage/
-dist/
-site/
-src/resources
+# Ignore Lightning Web Component meta files
+**/*.js-meta.xml
+
+# Build artifacts
 __lwr_cache__
+site
+node_modules
+
+# Other files to ignore
+coverage/
+.DS_Store

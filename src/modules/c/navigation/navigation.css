@@ -1,0 +1,37 @@
+.slds-nav-vertical {
+    background-color: #f3f2f2;
+    border-right: 1px solid #dddbda;
+    height: 100%;
+}
+
+.slds-nav-vertical__section {
+    margin-bottom: 0;
+}
+
+.slds-nav-vertical__title {
+    padding-top: 0.5rem;
+}
+
+.slds-nav-vertical__action {
+    display: flex;
+    align-items: center;
+}
+
+.slds-icon_container {
+    display: inline-flex;
+    align-items: center;
+}
+
+.slds-icon-standard-account {
+    background-color: #01a1e0;
+}
+
+.slds-icon-standard-contact {
+    background-color: #a094ed;
+}
+
+.slds-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: white;
+}

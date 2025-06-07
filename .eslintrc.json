@@ -10,6 +10,38 @@
                 "node": true,
                 "es6": true
             }
+        },
+        {
+            "files": ["**/serviceWorker.js", "src/assets/serviceWorker.js"],
+            "env": {
+                "serviceworker": true,
+                "browser": true
+            },
+            "rules": {
+                "no-restricted-globals": "off",
+                "array-callback-return": "off",
+                "consistent-return": "off"
+            }
+        },
+        {
+            "files": [
+                "**/connectivityStatus/*.js",
+                "**/utils/utils.js",
+                "**/app/app.js"
+            ],
+            "rules": {
+                "@lwc/lwc/no-async-operation": "off",
+                "no-unused-vars": "warn",
+                "no-shadow": "warn"
+            }
+        },
+        {
+            "files": ["**/accountService/*.js", "**/contactService/*.js"],
+            "rules": {
+                "no-else-return": "warn",
+                "no-unused-vars": "warn",
+                "no-case-declarations": "warn"
+            }
         }
     ]
 }

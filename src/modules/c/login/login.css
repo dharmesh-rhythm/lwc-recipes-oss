@@ -1,0 +1,111 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.login-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+h2 {
+    color: #0070d2;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #444;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d8dde6;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #0070d2;
+    box-shadow: 0 0 0 1px #0070d2;
+}
+
+.login-button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #0070d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.login-button:hover {
+    background-color: #005fb2;
+}
+
+.login-button:disabled {
+    background-color: #c9c9c9;
+    cursor: not-allowed;
+}
+
+.error-message {
+    background-color: #fef1f1;
+    border: 1px solid #ff9e9e;
+    color: #c23934;
+    padding: 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+}
+
+.retry-button {
+    display: block;
+    margin-top: 0.75rem;
+    padding: 0.5rem 1rem;
+    background-color: #c23934;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.retry-button:hover {
+    background-color: #a12b2b;
+}
+
+.retry-button:disabled {
+    background-color: #c9c9c9;
+    cursor: not-allowed;
+}
+
+.password-hint {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: #706e6b;
+    font-style: italic;
+}

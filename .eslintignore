@@ -1,0 +1,11 @@
+# Lightning Web Component meta files
+**/*.js-meta.xml
+
+# Build directories
+__lwr_cache__
+site
+node_modules
+
+# Test files
+**/coverage/**
+jest.config.js 

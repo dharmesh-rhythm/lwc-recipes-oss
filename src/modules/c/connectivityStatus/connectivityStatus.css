@@ -1,0 +1,139 @@
+.connectivity-container {
+    position: relative;
+    z-index: 100;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    font-size: 12px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #e1e1e1;
+    transition: background-color 0.3s ease;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.online .status-dot {
+    background-color: #04844b;
+    box-shadow: 0 0 0 2px rgba(4, 132, 75, 0.3);
+}
+
+.offline .status-dot {
+    background-color: #e74c3c;
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.3);
+}
+
+.status-text {
+    font-weight: 500;
+}
+
+.online .status-text {
+    color: #04844b;
+}
+
+.offline .status-text {
+    color: #e74c3c;
+}
+
+.pending-indicator {
+    margin-left: auto;
+    background-color: #ffb75d;
+    color: #514f4d;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: bold;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.7;
+    }
+}
+
+/* Toast notification */
+.toast {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 16px;
+    border-radius: 4px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    z-index: 9999;
+    max-width: 90%;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+.toast-content {
+    flex: 1;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: 12px;
+    opacity: 0.8;
+    padding: 0;
+}
+
+.toast-close:hover {
+    opacity: 1;
+}
+
+.toast.info {
+    background-color: #0176d3;
+}
+
+.toast.success {
+    background-color: #04844b;
+}
+
+.toast.warning {
+    background-color: #ffb75d;
+    color: #514f4d;
+}
+
+.toast.error {
+    background-color: #e74c3c;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .toast {
+        width: 90%;
+        font-size: 14px;
+    }
+}

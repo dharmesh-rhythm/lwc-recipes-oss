@@ -1,0 +1,68 @@
+<template>
+    <div class="slds-grid slds-grid_vertical">
+        <div class="slds-col slds-size_full slds-p-around_small">
+            <nav class="slds-nav-vertical" aria-label="Main Navigation">
+                <div class="slds-nav-vertical__section">
+                    <h2
+                        id="entity-header"
+                        class="slds-nav-vertical__title slds-text-title_caps"
+                    >
+                        Objects
+                    </h2>
+                    <ul>
+                        <li class={accountItemClass}>
+                            <a
+                                href="#"
+                                class="slds-nav-vertical__action"
+                                aria-describedby="entity-header"
+                                onclick={handleAccountsClick}
+                            >
+                                <span
+                                    class="slds-icon_container slds-icon-standard-account slds-m-right_x-small"
+                                >
+                                    <svg
+                                        class="slds-icon slds-icon_small"
+                                        aria-hidden="true"
+                                    >
+                                        <use
+                                            xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#account"
+                                        ></use>
+                                    </svg>
+                                    <span class="slds-assistive-text"
+                                        >Accounts</span
+                                    >
+                                </span>
+                                Accounts
+                            </a>
+                        </li>
+                        <li class={contactItemClass}>
+                            <a
+                                href="#"
+                                class="slds-nav-vertical__action"
+                                aria-describedby="entity-header"
+                                onclick={handleContactsClick}
+                            >
+                                <span
+                                    class="slds-icon_container slds-icon-standard-contact slds-m-right_x-small"
+                                >
+                                    <svg
+                                        class="slds-icon slds-icon_small"
+                                        aria-hidden="true"
+                                    >
+                                        <use
+                                            xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#contact"
+                                        ></use>
+                                    </svg>
+                                    <span class="slds-assistive-text"
+                                        >Contacts</span
+                                    >
+                                </span>
+                                Contacts
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+</template>

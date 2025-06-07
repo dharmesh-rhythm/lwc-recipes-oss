@@ -1,0 +1,239 @@
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #f4f6f9;
+}
+
+.app-header {
+    background-color: #0176d3; /* Salesforce brand blue */
+    color: white;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.app-header-content h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.app-main {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 70px; /* Space for footer */
+}
+
+.search-box-container {
+    padding: 12px 16px;
+    background-color: #f8f9fb;
+    border-bottom: 1px solid #e0e5ee;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 4px;
+    padding: 0 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.search-icon {
+    display: flex;
+    align-items: center;
+    color: #767676;
+}
+
+.search-svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    padding: 12px 8px;
+    font-size: 16px;
+    outline: none;
+}
+
+.card-list {
+    padding: 0 16px 16px;
+}
+
+.create-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: white;
+    color: #0176d3; /* Salesforce brand blue */
+    border: 1px solid #e0e5ee;
+    border-radius: 4px;
+    padding: 12px;
+    margin-bottom: 12px;
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.create-button:hover {
+    background-color: #f4f6f9;
+}
+
+.plus-icon {
+    font-size: 18px;
+    margin-right: 8px;
+}
+
+.account-item,
+.contact-item {
+    background-color: white;
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.account-item:hover,
+.contact-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.account-name,
+.contact-name {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.account-phone,
+.contact-phone,
+.contact-email {
+    color: #717171;
+    font-size: 14px;
+}
+
+.offline-record {
+    position: relative;
+    border-left: 4px solid #ffb75d; /* Orange border to indicate offline changes */
+}
+
+.offline-indicator {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: #ffb75d;
+    color: #514f4d;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+.app-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    background-color: white;
+    border-top: 1px solid #e0e5ee;
+    padding: 8px 0;
+    z-index: 50;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0;
+    flex: 1;
+    cursor: pointer;
+    position: relative;
+    color: #747474;
+    transition: color 0.2s ease;
+}
+
+.nav-item:hover {
+    color: #0176d3;
+}
+
+.nav-item.active {
+    color: #0176d3;
+}
+
+.nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 25%;
+    width: 50%;
+    height: 2px;
+    background-color: #0176d3;
+    border-radius: 2px;
+}
+
+.nav-icon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+    background-size: 24px;
+}
+
+.accounts-icon {
+    background: url('/assets/icons/standard-sprite/svg/symbols.svg#account')
+        center no-repeat;
+    background-size: 24px;
+}
+
+.contacts-icon {
+    background: url('/assets/icons/standard-sprite/svg/symbols.svg#contact')
+        center no-repeat;
+    background-size: 24px;
+}
+
+.assessments-icon {
+    background: url('/assets/icons/standard-sprite/svg/symbols.svg#task') center
+        no-repeat;
+    background-size: 24px;
+}
+
+.nav-label {
+    font-size: 12px;
+}
+
+.loading-spinner {
+    text-align: center;
+    padding: 24px;
+    color: #747474;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 32px 16px;
+    color: #747474;
+}
+
+/* Modal overlay styles */
+.slds-backdrop {
+    z-index: 9000; /* Ensure backdrop appears above all other UI elements */
+}
+
+.slds-modal {
+    z-index: 9001; /* Ensure modal appears above backdrop */
+}

@@ -5,13 +5,27 @@
     "bugs": "https://github.com/trailheadapps/lwc-recipes-oss/issues",
     "dependencies": {
         "@fastify/static": "^8.1.1",
+        "body-parser": "^2.2.0",
+        "buffer": "^6.0.3",
         "chart.js": "^4.4.9",
+        "cors": "^2.8.5",
         "d3": "^7.9.0",
+        "express": "^5.1.0",
         "fastify": "^5.2.2",
+        "jsforce": "^3.8.2",
+        "lightning-base-components": "^1.27.2-alpha",
         "lwc": "^8.12.7",
         "lwc-recipes-oss-ui-components": "^0.3.2",
         "lwr": "^0.16.11",
-        "wired-elements": "^3.0.0-rc.6"
+        "wired-elements": "^3.0.0-rc.6",
+        "workbox-cacheable-response": "^7.3.0",
+        "workbox-expiration": "^7.3.0",
+        "workbox-precaching": "^7.3.0",
+        "workbox-routing": "^7.3.0",
+        "workbox-strategies": "^7.3.0",
+        "workbox-sw": "^7.3.0",
+        "workbox-webpack-plugin": "^7.3.0",
+        "workbox-window": "^7.3.0"
     },
     "description": "Lightning Web Components Recipes Open Source",
     "devDependencies": {
@@ -21,6 +35,8 @@
         "@salesforce/eslint-config-lwc": "^3.7.1",
         "@salesforce/eslint-plugin-lightning": "^1.0.1",
         "@salesforce/wire-service-jest-util": "^4.1.5",
+        "browserify": "^17.0.0",
+        "concurrently": "^9.1.2",
         "eslint": "^8.57.1",
         "eslint-plugin-import": "^2.31.0",
         "eslint-plugin-jest": "^28.11.0",
@@ -30,7 +46,8 @@
         "jest-environment-jsdom": "^29.7.0",
         "lint-staged": "^15.5.0",
         "prettier": "^3.4.2",
-        "rimraf": "^6.0.1"
+        "rimraf": "^6.0.1",
+        "webpack-node-externals": "^3.0.0"
     },
     "homepage": "https://github.com/trailheadapps/lwc-recipes-oss",
     "keywords": [
@@ -52,20 +69,23 @@
         "test:unit": "jest",
         "test:unit:watch": "jest --watch",
         "test:unit:coverage": "jest --coverage",
-        "test:unit:debug": "jest --debug"
+        "test:unit:debug": "jest --debug",
+        "proxy-server": "node scripts/proxy-server.js",
+        "dev-with-proxy": "concurrently \"npm run proxy-server\" \"npm run dev\""
     },
     "engines": {
-        "node": "20.x"
+        "node": ">=16.0.0",
+        "npm": ">=8.0.0"
     },
     "lint-staged": {
-        "**/*.{cls,cmp,component,css,html,js,mjs,json,md,page,trigger,xml,yaml,yml}": [
+        "**/*.{cls,cmp,component,css,html,js,mjs,json,md,page,trigger,yaml,yml}": [
             "prettier --write"
         ],
         "**/src/**/*.js": [
             "eslint"
         ],
-        "**/src/**": [
-            "jest --bail --findRelatedTests --passWithNoTests"
+        "**/src/**/*.{js,html,css}": [
+            "jest --bail --findRelatedTests --passWithNoTests --forceExit"
         ]
     },
     "volta": {

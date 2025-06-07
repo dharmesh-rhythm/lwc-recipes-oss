@@ -1,4 +1,4 @@
-const navigationItems = {
+export const navigationItems = {
     hello: {
         title: 'Hello',
         value: 'hello',
@@ -43,10 +43,20 @@ const navigationItems = {
         title: '3rd Party Web Components',
         value: 'externalWc',
         visible: false
+    },
+    accounts: {
+        name: 'Accounts',
+        value: 'accounts',
+        visible: false
+    },
+    contacts: {
+        name: 'Contacts',
+        value: 'contacts',
+        visible: false
     }
 };
 
-const navigationElements = [
+export const navigationElements = [
     'hello',
     'composition',
     'child',
@@ -54,7 +64,7 @@ const navigationElements = [
     'misc',
     'party',
     'lightDom',
-    'externalWc'
+    'externalWc',
+    'accounts',
+    'contacts'
 ];
-
-export { navigationItems, navigationElements };

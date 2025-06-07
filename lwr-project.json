@@ -1,0 +1,61 @@
+{
+    "namespace": "c",
+    "lwcModuleMetadata": {
+        "c": {
+            "accountService": {
+                "exports": [
+                    "getAccounts",
+                    "getAccount",
+                    "createAccount",
+                    "updateAccount",
+                    "deleteAccount"
+                ]
+            },
+            "contactService": {
+                "exports": [
+                    "getContacts",
+                    "getContact",
+                    "getContactsByAccountId",
+                    "createContact",
+                    "updateContact",
+                    "deleteContact"
+                ]
+            },
+            "utils": {
+                "exports": ["reduceErrors", "formatDate", "generateId"]
+            }
+        }
+    },
+    "lwc": {
+        "modules": [
+            { "dir": "$rootDir/src/modules" },
+            {
+                "npm": "lwc-recipes-oss-ui-components"
+            }
+        ]
+    },
+    "bundleConfig": {
+        "exclude": ["lwc"],
+        "polyfills": true
+    },
+    "rollupConfig": {
+        "globals": {
+            "buffer": "buffer"
+        }
+    },
+    "assets": [
+        {
+            "alias": "assetsDir",
+            "dir": "$rootDir/src/assets",
+            "urlPath": "/assets"
+        }
+    ],
+    "routes": [
+        {
+            "id": "home",
+            "path": "/",
+            "rootComponent": "ui/app",
+            "layoutTemplate": "$layoutsDir/index.html"
+        }
+    ]
+}

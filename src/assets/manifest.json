@@ -3,21 +3,6 @@
     "short_name": "SF LWC",
     "icons": [
         {
-            "src": "./images/favicon-16x16.png",
-            "sizes": "16x16",
-            "type": "image/png"
-        },
-        {
-            "src": "./images/favicon-32x32.png",
-            "sizes": "32x32",
-            "type": "image/png"
-        },
-        {
-            "src": "./images/apple-touch-icon.png",
-            "sizes": "180x180",
-            "type": "image/png"
-        },
-        {
             "src": "./images/android-chrome-192x192.png",
             "sizes": "192x192",
             "type": "image/png"
@@ -26,24 +11,16 @@
             "src": "./images/android-chrome-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
-        },
-        {
-            "src": "./images/android-chrome-512x512.png",
-            "sizes": "1024x1024",
-            "type": "image/png",
-            "purpose": "maskable"
         }
     ],
     "theme_color": "#0070d2",
     "background_color": "#ffffff",
-    "display": "standalone",
+    "display": "fullscreen",
     "start_url": "/",
     "scope": "/",
     "description": "Salesforce-like CRM built with Lightning Web Components Open Source",
-    "orientation": "portrait-primary",
-    "lang": "en-US",
-    "dir": "ltr",
-    "prefer_related_applications": false,
+    "orientation": "portrait",
+    "display_override": ["window-controls-overlay"],
     "categories": ["business", "productivity"],
     "shortcuts": [
         {

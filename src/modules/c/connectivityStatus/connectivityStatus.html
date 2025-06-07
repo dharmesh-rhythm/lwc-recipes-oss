@@ -1,0 +1,24 @@
+<template>
+    <div class="connectivity-container">
+        <!-- Status indicator -->
+        <div class={statusClass}>
+            <span class="status-dot"></span>
+            <span class="status-text">{statusText}</span>
+
+            <!-- Pending operations indicator -->
+            <template lwc:if={hasPendingOperations}>
+                <span class="pending-indicator"> {pendingOperationsText} </span>
+            </template>
+        </div>
+
+        <!-- Toast notification -->
+        <template lwc:if={showToast}>
+            <div class={toastClass}>
+                <div class="toast-content">
+                    <span>{syncMessage}</span>
+                </div>
+                <button class="toast-close" onclick={closeToast}>×</button>
+            </div>
+        </template>
+    </div>
+</template>

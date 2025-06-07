@@ -1,0 +1,145 @@
+<template>
+    <!-- Header -->
+    <div class="app-container">
+        <header class="app-header">
+            <div class="app-header-content">
+                <h1>SRCM</h1>
+            </div>
+        </header>
+
+        <!-- Main content area -->
+        <main class="app-main">
+            <!-- Connectivity status bar -->
+            <c-connectivity-status></c-connectivity-status>
+
+            <!-- Account view -->
+            <template lwc:if={isAccountView}>
+                <div class="search-box-container">
+                    <div class="search-box">
+                        <span class="search-icon">
+                            <svg viewBox="0 0 24 24" class="search-svg">
+                                <path
+                                    d="M16.4 15.2l4.4 4.4-1.2 1.2-4.4-4.4c-1.2.9-2.7 1.4-4.2 1.4-4 0-7.2-3.2-7.2-7.2S7 3.4 11 3.4s7.2 3.2 7.2 7.2c0 1.5-.5 3-1.8 4.6zM11 5.6C8.2 5.6 6 7.8 6 10.6s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5z"
+                                ></path>
+                            </svg>
+                        </span>
+                        <input
+                            type="text"
+                            placeholder="Search accounts..."
+                            class="search-input"
+                        />
+                    </div>
+                </div>
+
+                <div class="card-list">
+                    <!-- Hiding the large create button as requested -->
+                    <!-- 
+                    <button class="create-button" onclick={handleNewAccount}>
+                        <span class="plus-icon">+</span> Create New Account
+                    </button>
+                    -->
+
+                    <div class="accounts-list">
+                        <template lwc:if={isLoading}>
+                            <div class="slds-spinner_container">
+                                <div
+                                    role="status"
+                                    class="slds-spinner slds-spinner_medium"
+                                >
+                                    <span class="slds-assistive-text"
+                                        >Loading</span
+                                    >
+                                    <div class="slds-spinner__dot-a"></div>
+                                    <div class="slds-spinner__dot-b"></div>
+                                </div>
+                            </div>
+                        </template>
+                        <template lwc:else>
+                            <c-account-manager
+                                hide-new-button="false"
+                                onnewedit={handleEditSuccess}
+                                oneditsuccess={handleEditSuccess}
+                                onnewcontact={handleNewContactFromAccount}
+                            ></c-account-manager>
+                        </template>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Contact view -->
+            <template lwc:if={isContactView}>
+                <div class="search-box-container">
+                    <div class="search-box">
+                        <span class="search-icon">
+                            <svg viewBox="0 0 24 24" class="search-svg">
+                                <path
+                                    d="M16.4 15.2l4.4 4.4-1.2 1.2-4.4-4.4c-1.2.9-2.7 1.4-4.2 1.4-4 0-7.2-3.2-7.2-7.2S7 3.4 11 3.4s7.2 3.2 7.2 7.2c0 1.5-.5 3-1.8 4.6zM11 5.6C8.2 5.6 6 7.8 6 10.6s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5z"
+                                ></path>
+                            </svg>
+                        </span>
+                        <input
+                            type="text"
+                            placeholder="Search contacts..."
+                            class="search-input"
+                        />
+                    </div>
+                </div>
+
+                <div class="card-list">
+                    <!-- Hiding the large create button as requested -->
+                    <!-- 
+                    <button class="create-button" onclick={handleNewContact}>
+                        <span class="plus-icon">+</span> Create New Contact
+                    </button>
+                    -->
+
+                    <div class="contacts-list">
+                        <template lwc:if={isLoading}>
+                            <div class="slds-spinner_container">
+                                <div
+                                    role="status"
+                                    class="slds-spinner slds-spinner_medium"
+                                >
+                                    <span class="slds-assistive-text"
+                                        >Loading</span
+                                    >
+                                    <div class="slds-spinner__dot-a"></div>
+                                    <div class="slds-spinner__dot-b"></div>
+                                </div>
+                            </div>
+                        </template>
+                        <template lwc:else>
+                            <c-contact-manager
+                                hide-new-button="false"
+                                onnewcontact={handleNewContact}
+                                oneditcontact={handleEditContact}
+                                oneditsuccess={handleEditSuccess}
+                            ></c-contact-manager>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </main>
+
+        <!-- Bottom navigation -->
+        <footer class="app-footer">
+            <div class={accountsTabClass} onclick={handleViewAccounts}>
+                <div class="nav-icon accounts-icon"></div>
+                <div class="nav-label">Accounts</div>
+            </div>
+            <div class={contactsTabClass} onclick={handleViewContacts}>
+                <div class="nav-icon contacts-icon"></div>
+                <div class="nav-label">Contacts</div>
+            </div>
+            <div class="nav-item" onclick={handleViewAssessments}>
+                <div class="nav-icon assessments-icon"></div>
+                <div class="nav-label">Assessments</div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Register Service Worker (no UI) -->
+    <c-service-worker-registration
+        onsyncpendingoperations={handleSyncOperations}
+    ></c-service-worker-registration>
+</template>

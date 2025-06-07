@@ -1,0 +1,534 @@
+<template>
+    <div class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header
+                class="slds-media slds-media_center slds-has-flexi-truncate"
+            >
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <span>Contacts</span>
+                    </h2>
+                </div>
+                <div class="slds-no-flex">
+                    <button
+                        class="slds-button slds-button_neutral"
+                        onclick={handleNewContact}
+                    >
+                        New
+                    </button>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <!-- Loading spinner -->
+            <template lwc:if={isLoading}>
+                <div class="slds-is-relative slds-p-around_medium">
+                    <div class="slds-spinner_container">
+                        <div
+                            class="slds-spinner slds-spinner_medium"
+                            role="status"
+                        >
+                            <span class="slds-assistive-text">Loading</span>
+                            <div class="slds-spinner__dot-a"></div>
+                            <div class="slds-spinner__dot-b"></div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Error message -->
+            <template lwc:if={error}>
+                <div
+                    class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error"
+                    role="alert"
+                >
+                    <span class="slds-assistive-text">Error</span>
+                    <h2>{error}</h2>
+                </div>
+            </template>
+
+            <!-- Delete Confirmation Modal -->
+            <template lwc:if={showDeleteConfirmation}>
+                <section
+                    role="dialog"
+                    tabindex="-1"
+                    aria-labelledby="modal-heading-01"
+                    aria-modal="true"
+                    aria-describedby="modal-content-id-1"
+                    class="slds-modal slds-fade-in-open"
+                >
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <h2 class="slds-text-heading_medium">
+                                Confirm Delete
+                            </h2>
+                        </header>
+                        <div
+                            class="slds-modal__content slds-p-around_medium"
+                            id="modal-content-id-1"
+                        >
+                            <p>{deleteConfirmationMessage}</p>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <button
+                                class="slds-button slds-button_neutral"
+                                onclick={handleCancelDelete}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                class="slds-button slds-button_destructive"
+                                onclick={handleConfirmDelete}
+                            >
+                                Delete
+                            </button>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+
+            <!-- Contact Form Modal -->
+            <template lwc:if={showContactForm}>
+                <section
+                    role="dialog"
+                    tabindex="-1"
+                    aria-modal="true"
+                    class="slds-modal slds-fade-in-open"
+                >
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <h2 class="slds-text-heading_medium">
+                                {formTitle}
+                            </h2>
+                            <button
+                                class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                                onclick={handleCancel}
+                                title="Close"
+                            >
+                                <svg
+                                    class="slds-button__icon slds-button__icon_large"
+                                    aria-hidden="true"
+                                >
+                                    <use
+                                        xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"
+                                    ></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium">
+                            <div class="slds-form slds-m-bottom_medium">
+                                <div class="slds-grid slds-gutters">
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <div
+                                            class="slds-form-element slds-m-bottom_small"
+                                        >
+                                            <label
+                                                class="slds-form-element__label"
+                                                for="accountId"
+                                                >Account</label
+                                            >
+                                            <div
+                                                class="slds-form-element__control"
+                                            >
+                                                <select
+                                                    id="accountId"
+                                                    class="slds-select"
+                                                    onchange={handleFieldChange}
+                                                    data-field="accountId"
+                                                >
+                                                    <option value="">
+                                                        --Select Account--
+                                                    </option>
+                                                    <template
+                                                        for:each={accounts}
+                                                        for:item="account"
+                                                    >
+                                                        <option
+                                                            key={account.id}
+                                                            value={account.id}
+                                                            selected={isAccountSelected}
+                                                        >
+                                                            {account.name}
+                                                        </option>
+                                                    </template>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="slds-form-element slds-m-bottom_small"
+                                        >
+                                            <label
+                                                class="slds-form-element__label"
+                                                for="firstName"
+                                                >First Name</label
+                                            >
+                                            <div
+                                                class="slds-form-element__control"
+                                            >
+                                                <input
+                                                    type="text"
+                                                    id="firstName"
+                                                    class="slds-input"
+                                                    value={currentContact.firstName}
+                                                    onchange={handleFieldChange}
+                                                    data-field="firstName"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="slds-form-element slds-m-bottom_small"
+                                        >
+                                            <label
+                                                class="slds-form-element__label"
+                                                for="lastName"
+                                                >Last Name</label
+                                            >
+                                            <div
+                                                class="slds-form-element__control"
+                                            >
+                                                <input
+                                                    type="text"
+                                                    id="lastName"
+                                                    class="slds-input"
+                                                    value={currentContact.lastName}
+                                                    onchange={handleFieldChange}
+                                                    data-field="lastName"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="slds-form-element slds-m-bottom_small"
+                                        >
+                                            <label
+                                                class="slds-form-element__label"
+                                                for="title"
+                                                >Title</label
+                                            >
+                                            <div
+                                                class="slds-form-element__control"
+                                            >
+                                                <input
+                                                    type="text"
+                                                    id="title"
+                                                    class="slds-input"
+                                                    value={currentContact.title}
+                                                    onchange={handleFieldChange}
+                                                    data-field="title"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <div
+                                            class="slds-form-element slds-m-bottom_small"
+                                        >
+                                            <label
+                                                class="slds-form-element__label"
+                                                for="email"
+                                                >Email</label
+                                            >
+                                            <div
+                                                class="slds-form-element__control"
+                                            >
+                                                <input
+                                                    type="email"
+                                                    id="email"
+                                                    class="slds-input"
+                                                    value={currentContact.email}
+                                                    onchange={handleFieldChange}
+                                                    data-field="email"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="slds-form-element slds-m-bottom_small"
+                                        >
+                                            <label
+                                                class="slds-form-element__label"
+                                                for="phone"
+                                                >Phone</label
+                                            >
+                                            <div
+                                                class="slds-form-element__control"
+                                            >
+                                                <input
+                                                    type="tel"
+                                                    id="phone"
+                                                    class="slds-input"
+                                                    value={currentContact.phone}
+                                                    onchange={handleFieldChange}
+                                                    data-field="phone"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="slds-form-element slds-m-bottom_small"
+                                        >
+                                            <label
+                                                class="slds-form-element__label"
+                                                for="mobilePhone"
+                                                >Mobile Phone</label
+                                            >
+                                            <div
+                                                class="slds-form-element__control"
+                                            >
+                                                <input
+                                                    type="tel"
+                                                    id="mobilePhone"
+                                                    class="slds-input"
+                                                    value={currentContact.mobilePhone}
+                                                    onchange={handleFieldChange}
+                                                    data-field="mobilePhone"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <button
+                                class="slds-button slds-button_neutral"
+                                onclick={handleCancel}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                class="slds-button slds-button_brand"
+                                onclick={handleSave}
+                            >
+                                Save
+                            </button>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+
+            <!-- Contact list -->
+            <template lwc:if={showContactList}>
+                <table
+                    class="slds-table slds-table_cell-buffer slds-table_bordered"
+                >
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Name">
+                                    Name
+                                </div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Account">
+                                    Account
+                                </div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Title">
+                                    Title
+                                </div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Email">
+                                    Email
+                                </div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Phone">
+                                    Phone
+                                </div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Actions">
+                                    Actions
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={contacts} for:item="contact">
+                            <tr
+                                key={contact.id}
+                                data-id={contact.id}
+                                onclick={handleViewContact}
+                                class="contact-row"
+                            >
+                                <td>
+                                    <div
+                                        class="slds-truncate"
+                                        title={contact.name}
+                                    >
+                                        {contact.firstName} {contact.lastName}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="slds-truncate"
+                                        title={contact.accountName}
+                                    >
+                                        {contact.accountName}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="slds-truncate"
+                                        title={contact.title}
+                                    >
+                                        {contact.title}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="slds-truncate"
+                                        title={contact.email}
+                                    >
+                                        <a href={contact.emailHref}
+                                            >{contact.email}</a
+                                        >
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="slds-truncate"
+                                        title={contact.phone}
+                                    >
+                                        {contact.phone}
+                                    </div>
+                                </td>
+                                <td onclick={stopPropagation}>
+                                    <button
+                                        class="slds-button slds-button_icon"
+                                        title="Edit"
+                                        onclick={handleEditContact}
+                                        data-id={contact.id}
+                                    >
+                                        <span class="slds-icon_container"
+                                            >✏️Edit</span
+                                        >
+                                    </button>
+                                    <button
+                                        class="slds-button slds-button_icon"
+                                        title="Delete"
+                                        onclick={handleDeleteContact}
+                                        data-id={contact.id}
+                                    >
+                                        <span class="slds-icon_container"
+                                            >🗑️Delete</span
+                                        >
+                                    </button>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+
+            <!-- Contact details -->
+            <template lwc:if={showContactDetail}>
+                <div class="slds-grid slds-grid_vertical">
+                    <div class="slds-col slds-m-bottom_medium">
+                        <button
+                            class="slds-button slds-button_neutral"
+                            onclick={handleBackToList}
+                        >
+                            Back to Contacts
+                        </button>
+                    </div>
+                    <div class="slds-col">
+                        <div class="slds-grid slds-wrap">
+                            <div
+                                class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-right_medium"
+                            >
+                                <dl
+                                    class="slds-dl_horizontal slds-m-bottom_medium"
+                                >
+                                    <dt
+                                        class="slds-dl_horizontal__label slds-truncate"
+                                    >
+                                        Account:
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail">
+                                        <a
+                                            href="#"
+                                            onclick={handleViewAccount}
+                                            data-id={currentContact.accountId}
+                                            >{accountName}</a
+                                        >
+                                    </dd>
+                                    <dt
+                                        class="slds-dl_horizontal__label slds-truncate"
+                                    >
+                                        Name:
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail">
+                                        {currentContact.firstName}
+                                        {currentContact.lastName}
+                                    </dd>
+                                    <dt
+                                        class="slds-dl_horizontal__label slds-truncate"
+                                    >
+                                        Title:
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail">
+                                        {currentContact.title}
+                                    </dd>
+                                    <dt
+                                        class="slds-dl_horizontal__label slds-truncate"
+                                    >
+                                        Email:
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail">
+                                        <a href={emailHref}
+                                            >{currentContact.email}</a
+                                        >
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div
+                                class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-left_medium"
+                            >
+                                <dl class="slds-dl_horizontal">
+                                    <dt
+                                        class="slds-dl_horizontal__label slds-truncate"
+                                    >
+                                        Phone:
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail">
+                                        {currentContact.phone}
+                                    </dd>
+                                    <dt
+                                        class="slds-dl_horizontal__label slds-truncate"
+                                    >
+                                        Mobile Phone:
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail">
+                                        {currentContact.mobilePhone}
+                                    </dd>
+                                    <dt
+                                        class="slds-dl_horizontal__label slds-truncate"
+                                    >
+                                        Created Date:
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail">
+                                        {formattedCreatedDate}
+                                    </dd>
+                                    <dt
+                                        class="slds-dl_horizontal__label slds-truncate"
+                                    >
+                                        Last Modified:
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail">
+                                        {formattedModifiedDate}
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>

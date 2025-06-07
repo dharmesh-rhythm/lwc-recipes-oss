@@ -1,0 +1,27 @@
+<template>
+    <div class="error-panel">
+        <div class="error-message">
+            <p>{friendlyMessage}</p>
+            <template lwc:if={errorMessages.length}>
+                <div class="details-section">
+                    <template lwc:if={viewDetails}>
+                        <div class="error-details">
+                            <template
+                                for:each={errorMessages}
+                                for:item="message"
+                            >
+                                <p key={message}>{message}</p>
+                            </template>
+                        </div>
+                    </template>
+                    <button
+                        class="slds-button slds-button_neutral"
+                        onclick={handleShowDetailsClick}
+                    >
+                        {detailsButtonLabel}
+                    </button>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>
