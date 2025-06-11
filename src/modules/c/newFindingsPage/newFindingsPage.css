@@ -1,0 +1,128 @@
+/* Section Wrapper */
+.highlighted-section {
+    background-color: #f3f2f2;
+    border-radius: 0.25rem;
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #e0e0e0;
+
+    display: flex;
+    align-items: center; /* Vertically center */
+    height: 3rem; /* Set a consistent height */
+    text-align: center; /* Center heading text */
+}
+.close-icon {
+    font-size: 1rem;
+    cursor: pointer;
+    color: #0070d2;
+}
+.close-icon:hover {
+    color: #005fb2;
+}
+svg.slds-icon {
+    display: inline-block;
+    vertical-align: middle;
+}
+svg.slds-icon {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Section Heading */
+.highlighted-section h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #1b5297; /* Matches Salesforce section title color */
+    margin: 0;
+}
+
+/* Labels in system info */
+.system-label {
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 0.25rem;
+}
+
+/* Style input and select fields with border radius */
+select {
+    border-radius: 12px;
+    padding: 0.5rem;
+    border: 1px solid #444;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='12' height='8' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8L0.803848 0.5L11.1962 0.5L6 8Z' fill='%23575a5e'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 0.65rem;
+    padding-right: 2rem;
+}
+
+.slds-input {
+    border-radius: 12px;
+}
+/* Remove double arrows in Firefox */
+select::-ms-expand {
+    display: none;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: 2rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button-icon {
+    width: 1.2rem;
+    height: 1.2rem;
+    stroke: currentColor;
+}
+
+/* Individual button styles */
+.cancel-button {
+    background-color: #fef2f2;
+    color: #d92d20;
+}
+
+.cancel-button:hover {
+    background-color: #d92d20;
+    color: #fff;
+}
+
+.save-new-button {
+    background-color: #f4f6f9;
+    color: #1e1e1e;
+}
+
+.save-new-button:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.save-button {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.save-button:hover {
+    background-color: #0066d1;
+}

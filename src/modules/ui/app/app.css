@@ -1,21 +1,15 @@
-/* We'll load Roboto font through the index.html instead of CSS import */
 :host {
     display: block;
     overflow: hidden;
     position: relative;
     width: 100%;
-    height: 100vh;
-    font-family: 'Roboto', Arial, sans-serif;
 }
 
 section {
-    max-width: 100%;
-    width: 100%;
-    height: 100%;
+    max-width: 1200px;
     margin: 0 auto;
     display: flex;
-    margin-top: 0;
-    font-family: 'Roboto', Arial, sans-serif;
+    margin-top: 2px;
 }
 
 article.container {

@@ -1,0 +1,584 @@
+<template>
+    <div class="response-section">
+        <div class="response-container">
+            <!-- Header and Action Buttons Row -->
+            <div class="header-row slds-m-bottom_small">
+                <div class="section-header">
+                    <h2 class="section-title">Findings ({totalResponses})</h2>
+                </div>
+                <div class="action-buttons">
+                    <button
+                        class={deleteButtonClass}
+                        onclick={handleDeleteSelected}
+                    >
+                        <svg
+                            class="button-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                        <span>Delete Selected ({selectedCount})</span>
+                    </button>
+                    <button
+                        class="action-button new-button"
+                        onclick={handleNewFinding}
+                    >
+                        <svg
+                            class="button-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M12 5v14m-7-7h14"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                        <span>New Finding</span>
+                    </button>
+                    <button
+                        class="action-button restore-button"
+                        onclick={handleRestore}
+                    >
+                        <svg
+                            class="button-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2zm0 4h18M7 15h4"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                        <span>Restore Columns</span>
+                    </button>
+                    <button
+                        class="action-button refresh-button"
+                        onclick={handleRefresh}
+                    >
+                        <svg
+                            class="button-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M21 3V8M21 8H16M21 8C19.4276 5.39974 16.4915 3.5 13 3.5C8.02944 3.5 4 7.52944 4 12.5C4 17.4706 8.02944 21.5 13 21.5C17.2351 21.5 20.7501 18.6536 21.7 14.75"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                        <span>Refresh</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="slds-card slds-card_boundary">
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="table-wrapper">
+                        <div
+                            class="slds-scrollable_y slds-scrollable_x table-container"
+                        >
+                            <table
+                                class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout"
+                            >
+                                <thead>
+                                    <tr class="slds-line-height_reset">
+                                        <th scope="col" class="actions-column">
+                                            <div class="column-header"></div>
+                                        </th>
+                                        <th scope="col" class="checkbox-column">
+                                            <div class="checkbox-container">
+                                                <input
+                                                    type="checkbox"
+                                                    class="slds-checkbox"
+                                                    onclick={handleSelectAll}
+                                                />
+                                            </div>
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            class="slds-text-align_center resizable-column"
+                                            data-column="AssessmentFindingsName"
+                                        >
+                                            <div class="column-header">
+                                                Assessment Findings Name
+                                                <div class="sort-icons">
+                                                    <svg
+                                                        class="sort-icon"
+                                                        onclick={handleSort}
+                                                        data-column="AssessmentFindingsName"
+                                                        data-direction="asc"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M4 15L12 7L20 15"
+                                                            fill="currentColor"
+                                                        />
+                                                    </svg>
+                                                    <svg
+                                                        class="sort-icon"
+                                                        onclick={handleSort}
+                                                        data-column="AssessmentFindingsName"
+                                                        data-direction="desc"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M4 9L12 17L20 9"
+                                                            fill="currentColor"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="resize-handle"
+                                                onmousedown={handleResizeStart}
+                                            ></div>
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            class="slds-text-align_center resizable-column"
+                                            data-column="FindingType"
+                                        >
+                                            <div class="column-header">
+                                                Finding Type
+                                                <div class="sort-icons">
+                                                    <svg
+                                                        class="sort-icon"
+                                                        onclick={handleSort}
+                                                        data-column="FindingType"
+                                                        data-direction="asc"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M4 15L12 7L20 15"
+                                                            fill="currentColor"
+                                                        />
+                                                    </svg>
+                                                    <svg
+                                                        class="sort-icon"
+                                                        onclick={handleSort}
+                                                        data-column="FindingType"
+                                                        data-direction="desc"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M4 9L12 17L20 9"
+                                                            fill="currentColor"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="resize-handle"
+                                                onmousedown={handleResizeStart}
+                                            ></div>
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            class="slds-text-align_center resizable-column"
+                                            data-column="RootCause"
+                                        >
+                                            <div class="column-header">
+                                                Root Cause
+                                                <div class="sort-icons">
+                                                    <svg
+                                                        class="sort-icon"
+                                                        onclick={handleSort}
+                                                        data-column="RootCause"
+                                                        data-direction="asc"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M4 15L12 7L20 15"
+                                                            fill="currentColor"
+                                                        />
+                                                    </svg>
+                                                    <svg
+                                                        class="sort-icon"
+                                                        onclick={handleSort}
+                                                        data-column="RootCause"
+                                                        data-direction="desc"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M4 9L12 17L20 9"
+                                                            fill="currentColor"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="resize-handle"
+                                                onmousedown={handleResizeStart}
+                                            ></div>
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            class="slds-text-align_center resizable-column"
+                                            data-column="Assessment"
+                                        >
+                                            <div class="column-header">
+                                                Assessment
+                                                <div class="sort-icons">
+                                                    <svg
+                                                        class="sort-icon"
+                                                        onclick={handleSort}
+                                                        data-column="Assessment"
+                                                        data-direction="asc"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M4 15L12 7L20 15"
+                                                            fill="currentColor"
+                                                        />
+                                                    </svg>
+                                                    <svg
+                                                        class="sort-icon"
+                                                        onclick={handleSort}
+                                                        data-column="Assessment"
+                                                        data-direction="desc"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M4 9L12 17L20 9"
+                                                            fill="currentColor"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="resize-handle"
+                                                onmousedown={handleResizeStart}
+                                            ></div>
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            class="slds-text-align_center resizable-column"
+                                            data-column="AssessmentQuestion"
+                                        >
+                                            <div class="column-header">
+                                                Assessment Question
+                                                <div class="sort-icons">
+                                                    <svg
+                                                        class="sort-icon"
+                                                        onclick={handleSort}
+                                                        data-column="AssessmentQuestion"
+                                                        data-direction="asc"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M4 15L12 7L20 15"
+                                                            fill="currentColor"
+                                                        />
+                                                    </svg>
+                                                    <svg
+                                                        class="sort-icon"
+                                                        onclick={handleSort}
+                                                        data-column="AssessmentQuestion"
+                                                        data-direction="desc"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M4 9L12 17L20 9"
+                                                            fill="currentColor"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="resize-handle"
+                                                onmousedown={handleResizeStart}
+                                            ></div>
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            class="slds-text-align_center resizable-column"
+                                            data-column="RepeatFinding"
+                                        >
+                                            <div class="column-header">
+                                                Repeat Finding
+                                                <div class="sort-icons">
+                                                    <svg
+                                                        class="sort-icon"
+                                                        onclick={handleSort}
+                                                        data-column="RepeatFinding"
+                                                        data-direction="asc"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M4 15L12 7L20 15"
+                                                            fill="currentColor"
+                                                        />
+                                                    </svg>
+                                                    <svg
+                                                        class="sort-icon"
+                                                        onclick={handleSort}
+                                                        data-column="RepeatFinding"
+                                                        data-direction="desc"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M4 9L12 17L20 9"
+                                                            fill="currentColor"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="resize-handle"
+                                                onmousedown={handleResizeStart}
+                                            ></div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template
+                                        for:each={displayedResponses}
+                                        for:item="response"
+                                    >
+                                        <tr
+                                            key={response.id}
+                                            class={response.rowClass}
+                                        >
+                                            <td class="actions-cell">
+                                                <div
+                                                    class="action-trigger"
+                                                    data-id={response.id}
+                                                    onclick={handleRowAction}
+                                                >
+                                                    <div class="circle-button">
+                                                        <svg
+                                                            class="arrow-icon"
+                                                            viewBox="0 0 24 24"
+                                                            fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                            <path
+                                                                d="M9 18L15 12L9 6"
+                                                                stroke="currentColor"
+                                                                stroke-width="2"
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                            />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="checkbox-cell">
+                                                <div class="checkbox-container">
+                                                    <input
+                                                        type="checkbox"
+                                                        class="slds-checkbox"
+                                                        checked={response.isSelected}
+                                                        data-id={response.id}
+                                                        onclick={handleRowSelect}
+                                                    />
+                                                </div>
+                                            </td>
+                                            <td
+                                                data-label="Name"
+                                                class="slds-text-align_left"
+                                            >
+                                                <div
+                                                    class="slds-truncate"
+                                                    title={response.name}
+                                                >
+                                                    {response.name}
+                                                </div>
+                                            </td>
+                                            <td
+                                                data-label="Completed"
+                                                class="slds-text-align_center"
+                                            >
+                                                <div
+                                                    class="slds-truncate"
+                                                    title={response.completed}
+                                                >
+                                                    {response.completed}%
+                                                </div>
+                                            </td>
+                                            <td
+                                                data-label="Score"
+                                                class="slds-text-align_center"
+                                            >
+                                                <div
+                                                    class="slds-truncate"
+                                                    title={response.score}
+                                                >
+                                                    {response.score}%
+                                                </div>
+                                            </td>
+                                            <td
+                                                data-label="Status"
+                                                class="slds-text-align_center"
+                                            >
+                                                <div
+                                                    class="status-indicator"
+                                                    data-status={response.status}
+                                                >
+                                                    {response.status}
+                                                </div>
+                                            </td>
+                                            <td
+                                                data-label="Submission Date"
+                                                class="slds-text-align_center"
+                                            >
+                                                <div
+                                                    class="slds-truncate"
+                                                    title={response.submissionDate}
+                                                >
+                                                    {response.submissionDate}
+                                                </div>
+                                            </td>
+                                            <td
+                                                data-label="Follow Up Requests"
+                                                class="slds-text-align_center"
+                                            >
+                                                <div
+                                                    class="slds-truncate"
+                                                    title={response.followUpCount}
+                                                >
+                                                    {response.followUpCount}
+                                                </div>
+                                            </td>
+                                            <td
+                                                data-label="Reports"
+                                                class="slds-text-align_center"
+                                            >
+                                                <div
+                                                    class="slds-truncate"
+                                                    title={response.reports}
+                                                >
+                                                    {response.reports}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Dropdown Menu -->
+                    <div
+                        if:true={showDropdown}
+                        class="action-dropdown"
+                        style={dropdownStyle}
+                    >
+                        <div class="dropdown-item" onclick={handleEdit}>
+                            Edit
+                        </div>
+                        <div
+                            class="dropdown-item delete"
+                            onclick={handleDelete}
+                        >
+                            Delete
+                        </div>
+                    </div>
+
+                    <!-- Pagination Controls -->
+                    <div class="pagination-container">
+                        <div class="pagination-controls">
+                            <button
+                                class="pagination-button"
+                                onclick={handlePageChange}
+                                data-page="prev"
+                            >
+                                <svg
+                                    class="pagination-icon"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M15 18L9 12L15 6"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                                <!-- <span>Previous</span> -->
+                            </button>
+                            <div class="slds-text-color_weak pagination-text">
+                                {paginationText}
+                            </div>
+                            <button
+                                class="pagination-button"
+                                onclick={handlePageChange}
+                                data-page="next"
+                            >
+                                <!-- <span>Next</span> -->
+                                <svg
+                                    class="pagination-icon"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M9 6L15 12L9 18"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template if:true={showNewFindingsForm}>
+        <!-- <ui-new-findings-page
+                onsubmitfinding={handleFindingSubmit}
+                oncancelfinding={handleFindingCancel}
+            ></ui-new-findings-page> -->
+        <c-new-findings-page></c-new-findings-page>
+    </template>
+</template>
+
+<!-- New Findings Form -->

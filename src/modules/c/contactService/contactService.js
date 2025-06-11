@@ -1,11 +1,6 @@
 import * as utils from 'c/utils';
 import { isOnline } from 'c/utils';
 
-// Placeholder for your Apex REST API endpoint for Contacts.
-// IMPORTANT: Replace this with your actual Salesforce Apex REST endpoint URL.
-const APEX_REST_ENDPOINT_URL =
-    'https://customization-app-1405-dev-ed.scratch.my.salesforce.com/services/apexrest/Rhythm/lwcosscontacts';
-
 // Mock data for contacts
 const mockContacts = [
     {
@@ -79,112 +74,15 @@ export function initializeOfflineStorage() {
 // Get all contacts
 export function getContacts() {
     if (isOnline()) {
-        console.log('🌐 Online: Getting contacts from Apex REST API');
-
-        // IMPORTANT: Ensure sessionId is current and valid
-        const sessionId =
-            '00DO500000ZIhWy!AQMAQKMQqDr21S6dSyL_oN9jR7Q43pUcjvYRvagpTQrTkgk8MfDrI.PZBRCVDTkB_Dik7IJ.AjC8aw2KLWnRXdkGW2zPITZy'; // Keep this updated - UPDATED TO MATCH CREATE FUNCTION
-
-        if (!sessionId || sessionId === 'YOUR_SALESFORCE_SESSION_ID') {
-            console.error(
-                '❌ ERROR: Session ID is not set. Please ensure it is valid.'
-            );
-            return Promise.reject(
-                new Error(
-                    'Session ID not configured. Cannot fetch from Salesforce.'
-                )
-            );
-        }
-
-        const headers = {
-            Authorization: `Bearer ${sessionId}`,
-            'Content-Type': 'application/json'
-        };
-
-        return fetch(APEX_REST_ENDPOINT_URL, {
-            method: 'GET',
-            mode: 'cors',
-            headers: headers
-        })
-            .then((response) => {
-                console.log(
-                    `🌐 Received response from Apex REST API: ${response}`
-                );
-                if (response.status === 401) {
-                    console.error(
-                        '❌ 401 Unauthorized: The Salesforce session ID is likely invalid or expired.'
-                    );
-                    throw new Error(
-                        'Unauthorized: Check Salesforce session ID/access token and CORS setup.'
-                    );
-                }
-                if (!response.ok) {
-                    // Try to get more error details from response if possible
-                    return response.text().then((text) => {
-                        console.error(
-                            `❌ HTTP error! status: ${response.status}, message: ${text}`
-                        );
-                        throw new Error(
-                            `HTTP error! status: ${response.status}, message: ${text}`
-                        );
-                    });
-                }
-                return response.json();
-            })
-            .then((fetchedContacts) => {
-                console.log(
-                    `✅ Fetched ${fetchedContacts.length} contacts from Apex REST API`
-                );
-                // Update the in-memory store and local storage
-                console.log('fetchedContacts', fetchedContacts);
-                contacts = [...fetchedContacts]; // Update the in-memory 'contacts' variable
-                console.log(
-                    `💾 Saving ${fetchedContacts.length} contacts to offline storage`
-                );
-                // Ensure the fields match what utils.saveItems expects or adapt if necessary
-                utils.saveItems(utils.STORE_NAMES.CONTACTS, fetchedContacts);
-                return fetchedContacts;
-            })
-            .catch((error) => {
-                console.error(
-                    '❌ Error fetching contacts from Apex REST API:',
-                    error.message
-                );
-                console.log(
-                    '📴 Falling back to offline: Getting contacts from local storage due to API error'
-                );
-                return utils
-                    .getAll(utils.STORE_NAMES.CONTACTS)
-                    .then((contactsFromStorage) => {
-                        console.log(
-                            `📋 Retrieved ${contactsFromStorage.length} contacts from offline storage (fallback)`
-                        );
-                        if (
-                            contactsFromStorage &&
-                            contactsFromStorage.length > 0
-                        ) {
-                            contacts = [...contactsFromStorage]; // Update in-memory store with fallback data
-                            return contactsFromStorage;
-                        }
-                        // If local storage is also empty or call failed, rethrow the original error or a new one
-                        throw new Error(
-                            `Failed to fetch from API and no local data available. Original error: ${error.message}`
-                        );
-                    });
-            });
+        // Online: get from server and update local storage
+        return Promise.resolve([...contacts]).then((result) => {
+            utils.saveItems(utils.STORE_NAMES.CONTACTS, result);
+            return result;
+        });
     }
 
-    console.log('📴 Offline: Getting contacts from local storage');
     // Offline: get from local storage
-    return utils
-        .getAll(utils.STORE_NAMES.CONTACTS)
-        .then((contactsFromStorage) => {
-            console.log(
-                `📋 Retrieved ${contactsFromStorage.length} contacts from offline storage`
-            );
-            contacts = [...contactsFromStorage]; // Update in-memory store with offline data
-            return contactsFromStorage;
-        });
+    return utils.getAll(utils.STORE_NAMES.CONTACTS);
 }
 
 // Get contact by ID
@@ -220,123 +118,6 @@ export function getContactsByAccountId(accountId) {
 
 // Create a new contact
 export function createContact(contactData) {
-    console.log('🔄 Creating contact:', contactData);
-
-    if (isOnline()) {
-        console.log(
-            '🌐 Online: Creating contact on server',
-            `${contactData.firstName} ${contactData.lastName}`
-        );
-        // Log the detailed contactData object being sent
-        console.log(
-            '📦 Contact data being sent to server:',
-            JSON.stringify(contactData, null, 2)
-        );
-
-        // IMPORTANT: Ensure sessionId is current and valid - Get a fresh session ID from Salesforce
-        // Get this by running UserInfo.getSessionId() in Developer Console Execute Anonymous window
-        const sessionId =
-            '00DO500000ZIhWy!AQMAQKMQqDr21S6dSyL_oN9jR7Q43pUcjvYRvagpTQrTkgk8MfDrI.PZBRCVDTkB_Dik7IJ.AjC8aw2KLWnRXdkGW2zPITZy'; // <-- UPDATED SESSION ID
-
-        if (!sessionId || sessionId === 'YOUR_SALESFORCE_SESSION_ID') {
-            console.error(
-                '❌ ERROR: Session ID is not set for createContact. Please ensure it is valid.'
-            );
-            // Instead of rejecting immediately, let's fall back to offline creation
-            console.log(
-                '📴 Falling back to offline contact creation due to missing session ID'
-            );
-            return createContactOffline(contactData);
-        }
-
-        const headers = {
-            Authorization: `Bearer ${sessionId}`,
-            'Content-Type': 'application/json',
-            Accept: 'application/json'
-        };
-
-        // Send the contact data for creation
-        return fetch(APEX_REST_ENDPOINT_URL, {
-            method: 'POST',
-            headers: headers,
-            mode: 'cors',
-            body: JSON.stringify(contactData)
-        })
-            .then((response) => {
-                console.log(`🌐 Server response status: ${response.status}`);
-                if (response.status === 401) {
-                    console.error(
-                        '❌ 401 Unauthorized: The Salesforce session ID is likely invalid or expired.'
-                    );
-                    // Instead of throwing, let's fall back to offline creation
-                    console.log(
-                        '📴 Falling back to offline contact creation due to authentication error'
-                    );
-                    return createContactOffline(contactData);
-                }
-                if (!response.ok) {
-                    return response.text().then((text) => {
-                        console.error(
-                            `❌ HTTP error! status: ${response.status}, message: ${text}`
-                        );
-                        console.error('Full response details:', response);
-                        // Instead of throwing, let's fall back to offline creation
-                        console.log(
-                            '📴 Falling back to offline contact creation due to server error'
-                        );
-                        return createContactOffline(contactData);
-                    });
-                }
-                return response.json();
-            })
-            .then((createdContactFromSF) => {
-                // Check if this is a contact object or undefined (from offline fallback)
-                if (!createdContactFromSF || !createdContactFromSF.id) {
-                    console.log(
-                        '⚠️ No valid contact returned from server, using offline created contact'
-                    );
-                    return createContactOffline(contactData);
-                }
-
-                console.log(
-                    '✅ Contact created on server:',
-                    createdContactFromSF
-                );
-                // Add to in-memory array
-                contacts.push(createdContactFromSF);
-                // Save the server-confirmed contact (with SF ID) to local DB
-                console.log(
-                    '💾 Saving server-created contact to offline storage'
-                );
-                return utils
-                    .saveItem(utils.STORE_NAMES.CONTACTS, createdContactFromSF)
-                    .then(() => createdContactFromSF); // Return the contact from SF
-            })
-            .catch((error) => {
-                console.error(
-                    '❌ Error creating contact via Apex REST API:',
-                    error.message
-                );
-                // Fall back to offline creation instead of rethrowing
-                console.log(
-                    '📴 Falling back to offline contact creation due to error:',
-                    error.message
-                );
-                return createContactOffline(contactData);
-            });
-    }
-
-    // If offline, use the offline creation function
-    return createContactOffline(contactData);
-}
-
-// Helper function for offline contact creation
-function createContactOffline(contactData) {
-    console.log(
-        '📴 Creating contact in local storage',
-        `${contactData.firstName} ${contactData.lastName}`
-    );
-
     const newContact = {
         ...contactData,
         id: generateId(),
@@ -344,25 +125,26 @@ function createContactOffline(contactData) {
         lastModifiedDate: new Date().toISOString()
     };
 
+    if (isOnline()) {
+        // Online: create on server and update local storage
+        contacts.push(newContact);
+        return Promise.resolve({ ...newContact }).then((result) => {
+            utils.saveItem(utils.STORE_NAMES.CONTACTS, result);
+            return result;
+        });
+    }
+
+    // Offline: save to local storage and queue for sync
     return utils
         .saveItem(utils.STORE_NAMES.CONTACTS, newContact)
         .then((result) => {
-            console.log('💾 Contact saved to offline storage', result);
-            // Add to in-memory array
-            contacts.push(result);
             // Add to pending operations queue
-            console.log('📝 Adding CREATE operation to pending queue');
             return utils
                 .addPendingOperation({
                     type: 'CREATE_CONTACT',
                     data: result
                 })
-                .then(() => {
-                    console.log(
-                        '✅ Contact created locally and queued for sync'
-                    );
-                    return result;
-                });
+                .then(() => result);
         });
 }
 

@@ -69,7 +69,7 @@ export default class AssessmentType extends LightningElement {
             // Get an OAuth token or session ID
             // In a real app, you would have a proper OAuth flow
             const sessionId =
-                '00D7z00000P3CKp!AQEAQFKwmwBkDRjyqOFqec8P6JFs.lSfwBSthHyGfPUCPpJN2vUXUz6QE4UUMIAViND2smQ0Pwb2JY0vWTGLNsSW_sx8W1.Z';
+                '00D7z00000P3CKp!AQEAQIMyD3k_iMTZVUWMArr.hwUFwl.DprNgTqJtGSxb.x.Qa1.5SC6CMC9ciVGG_kyN1CGymuWZGeBzjo1N0tMOwGwf5a7N';
 
             const headers = {
                 Authorization: `Bearer ${sessionId}`,

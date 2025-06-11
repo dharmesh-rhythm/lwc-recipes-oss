@@ -4,7 +4,7 @@ const APEX_REST_ENDPOINT_URL =
 
 // Session ID for Salesforce authentication
 const SESSION_ID =
-    '00DO500000ZIhWy!AQEAQGHZ0lYxoF28T9aVgGLkahxEmJU.W4VBgGKKqbcYMJWfUGjfUDL_ez_004TFATKVmZbY24U4mCfw7jotQpA7ewLKMoVs';
+    '00D7z00000P3CKp!AQEAQIMyD3k_iMTZVUWMArr.hwUFwl.DprNgTqJtGSxb.x.Qa1.5SC6CMC9ciVGG_kyN1CGymuWZGeBzjo1N0tMOwGwf5a7N';
 
 // Get all assessments from Salesforce
 export function getAssessments() {

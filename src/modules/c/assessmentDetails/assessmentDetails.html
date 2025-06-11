@@ -1,0 +1,104 @@
+<template>
+    <div class="details-container">
+        <!-- Create tab section (Define, Assign) - card style -->
+        <template if:true={isCreateSidebarTab}>
+            <div class="card-tabs-container">
+                <div
+                    class="card-tab"
+                    class:card-tab-active={isDefineTab}
+                    onclick={selectDefine}
+                >
+                    <!-- <div class="card-tab-icon">
+                        <lightning-icon icon-name="utility:setup" alternative-text="Setup" size="small"></lightning-icon>
+                    </div> -->
+                    <div class="card-tab-content">
+                        <div class="card-tab-title">Define</div>
+                        <div class="card-tab-subtitle">Assessment details</div>
+                    </div>
+                </div>
+
+                <div
+                    class="card-tab"
+                    class:card-tab-active={isAssignTab}
+                    onclick={selectAssign}
+                >
+                    <!-- <div class="card-tab-icon">
+                        <lightning-icon icon-name="utility:user" alternative-text="User" size="small"></lightning-icon>
+                    </div> -->
+                    <div class="card-tab-content">
+                        <div class="card-tab-title">Assign</div>
+                        <div class="card-tab-subtitle">Assessment users</div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Manage tab section (Response, Finding, Email Communication) - card style -->
+        <template if:true={isManageSidebarTab}>
+            <div class="card-tabs-container">
+                <div
+                    class="card-tab"
+                    class:card-tab-active={isResponseTab}
+                    onclick={selectReview}
+                >
+                    <!-- <div class="card-tab-icon">
+                        <lightning-icon icon-name="utility:questions_and_answers" alternative-text="Response" size="small"></lightning-icon>
+                    </div> -->
+                    <div class="card-tab-content">
+                        <div class="card-tab-title">Response</div>
+                        <div class="card-tab-subtitle">Response details</div>
+                    </div>
+                </div>
+
+                <div
+                    class="card-tab"
+                    class:card-tab-active={isFindingTab}
+                    onclick={selectFinding}
+                >
+                    <!-- <div class="card-tab-icon">
+                        <lightning-icon icon-name="utility:search" alternative-text="Finding" size="small"></lightning-icon>
+                    </div> -->
+                    <div class="card-tab-content">
+                        <div class="card-tab-title">Finding</div>
+                        <div class="card-tab-subtitle">Review findings</div>
+                    </div>
+                </div>
+
+                <div
+                    class="card-tab"
+                    class:card-tab-active={isEmailTab}
+                    onclick={selectEmail}
+                >
+                    <!-- <div class="card-tab-icon">
+                        <lightning-icon icon-name="utility:email" alternative-text="Email Communication" size="small"></lightning-icon>
+                    </div> -->
+                    <div class="card-tab-content">
+                        <div class="card-tab-title">Email Communication</div>
+                        <div class="card-tab-subtitle">Email messages</div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Tab content sections -->
+        <div class="tab-content-container">
+            <template if:true={isDefineTab}>
+                <c-define-section record-id={recordId}></c-define-section>
+            </template>
+            <template if:true={isAssignTab}>
+                <c-assign-section record-id={recordId}></c-assign-section>
+            </template>
+            <template if:true={isResponseTab}>
+                <c-response-section record-id={recordId}></c-response-section>
+            </template>
+            <template if:true={isFindingTab}>
+                <c-findings-section record-id={recordId}></c-findings-section>
+            </template>
+            <template if:true={isEmailTab}>
+                <c-email-communication-section
+                    record-id={recordId}
+                ></c-email-communication-section>
+            </template>
+        </div>
+    </div>
+</template>

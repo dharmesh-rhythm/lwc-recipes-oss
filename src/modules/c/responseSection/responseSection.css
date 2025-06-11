@@ -1,0 +1,1296 @@
+/* ===== Column Resize Cursor ===== */
+.slds-resizable-trigger {
+    cursor: col-resize;
+}
+
+/* ===== Wrap and Clip Text Toggles ===== */
+.wrap-text {
+    white-space: normal !important;
+    word-break: break-word;
+}
+.clip-text {
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ===== Sticky Header Fix (if needed) ===== */
+.slds-table thead th {
+    background-color: #f3f3f3;
+    z-index: 1;
+}
+
+/* ===== Scrollable Table Body Styling ===== */
+.slds-scrollable_x {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+/* ===== Cell Padding Fix (for consistent alignment) ===== */
+.slds-table td,
+.slds-table th {
+    padding: 0.5rem 0.75rem;
+}
+
+/* ===== Checkbox Alignment ===== */
+.slds-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===== Row Selection Highlight ===== */
+.slds-table tbody tr.selected-row,
+.slds-table tbody tr.selected-row:hover {
+    background-color: #f3f3f3;
+}
+
+.slds-table tbody tr.selected-row td {
+    background-color: inherit;
+}
+
+/* ===== Action Button Spacing ===== */
+.slds-button-group .slds-button_icon {
+    margin-right: 0.25rem;
+}
+
+/* ===== Dropdown Position Fix for Column Headers ===== */
+.slds-dropdown {
+    position: absolute;
+    z-index: 10;
+}
+
+/* ===== Ensure Table Doesn't Overflow Card Horizontally ===== */
+.slds-card__body {
+    overflow-x: auto;
+    padding-bottom: 0;
+}
+
+/* ===== Tooltip for Overflowed Cells (optional enhancement) ===== */
+.slds-truncate[title] {
+    cursor: help;
+}
+
+.slds-table {
+    table-layout: fixed;
+}
+
+.slds-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #fff;
+}
+
+.slds-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.slds-resizable {
+    position: relative;
+}
+
+.slds-resizable__handle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    cursor: col-resize;
+    z-index: 2;
+}
+
+.slds-resizable__divider {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: #dddbda;
+}
+
+.slds-button-group {
+    display: flex;
+    align-items: center;
+}
+
+.slds-input {
+    width: 200px;
+}
+
+.slds-card__footer {
+    background-color: #f3f2f2;
+    border-top: 1px solid #dddbda;
+}
+
+/* Hover effects */
+.slds-table tbody tr:hover {
+    background-color: #f3f2f2;
+}
+
+.slds-button:hover {
+    transform: translateY(-1px);
+    transition: transform 0.2s ease;
+}
+
+/* Custom scrollbar */
+.slds-scrollable_x::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.slds-scrollable_x::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.slds-scrollable_x::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.slds-scrollable_x::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Base Styles */
+.response-section {
+    font-family: 'Roboto', Arial, sans-serif;
+    position: relative;
+    width: 100%;
+    padding: 1rem;
+}
+
+.response-container {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 1.5rem 1.5rem 1rem;
+    background-color: #ffffff;
+    box-shadow:
+        0 1px 3px 0 rgba(0, 0, 0, 0.1),
+        0 1px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+    margin-bottom: 8px;
+}
+
+.section-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #181818;
+    border-bottom: 2px solid #6a31ea;
+    padding-bottom: 4px;
+}
+
+.top-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 16px 0;
+    gap: 16px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #0066ff;
+    border: none;
+    border-radius: 40px;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-width: 96px;
+    height: 40px;
+}
+
+.action-button:hover {
+    background-color: #0052cc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.button-icon {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+/* Specific button styles */
+.new-button {
+    background-color: #0066ff;
+}
+
+.refresh-button {
+    background-color: #0066ff;
+}
+
+.share-button {
+    background-color: #0066ff;
+}
+
+.right-buttons {
+    display: flex;
+    gap: 24px;
+}
+
+.table-wrapper {
+    position: relative;
+    border: 3px solid #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table-container {
+    height: calc(100vh - 250px);
+    min-height: 150px;
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.slds-scrollable_x {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.slds-card_boundary {
+    border: none;
+    box-shadow: none;
+}
+
+.slds-card__body_inner {
+    padding: 0;
+}
+
+/* Excel-like table behavior */
+.slds-table_fixed-layout {
+    table-layout: fixed;
+    width: max-content;
+    min-width: 100%;
+}
+
+/* Row styles */
+.slds-table td {
+    padding: 8px !important;
+    height: 36px !important;
+    vertical-align: middle;
+}
+
+/* Base column styles */
+.slds-table th {
+    background-color: #f3f3f3;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    white-space: nowrap;
+    padding: 4px !important;
+    height: 32px !important;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* First and last header cells with border radius */
+.slds-table th:first-child {
+    border-top-left-radius: 8px;
+}
+
+.slds-table th:last-child {
+    border-top-right-radius: 8px;
+}
+
+/* Column header */
+.column-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 12px;
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: visible;
+    color: #444444;
+    user-select: none;
+}
+
+/* Center align all cell contents */
+.slds-table td {
+    text-align: center !important;
+}
+
+.slds-table td .slds-truncate {
+    text-align: center !important;
+    justify-content: center;
+}
+
+/* Specific alignment for the name column */
+.slds-table td[data-label='Name'] .slds-truncate {
+    text-align: center !important;
+}
+
+/* Status indicator centering */
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+/* Status Colors */
+.status-indicator[data-status='In Progress'] {
+    background-color: #fef3c7;
+    color: #92400e;
+    font-weight: 700;
+}
+
+.status-indicator[data-status='Submitted'] {
+    background-color: #e0f2fe;
+    color: #075985;
+    font-weight: 700;
+}
+
+.status-indicator[data-status='In Review'] {
+    background-color: #f3e8ff;
+    color: #6b21a8;
+    font-weight: 700;
+}
+
+.status-indicator[data-status='Need More Information'] {
+    background-color: #fee2e2;
+    color: #991b1b;
+    font-weight: 700;
+}
+
+.status-indicator[data-status='New'] {
+    background-color: #dbeafe;
+    color: #1e40af;
+    font-weight: 700;
+}
+
+.status-indicator[data-status='Review Completed'] {
+    background-color: #dcfce7;
+    color: #15803d;
+    font-weight: 700;
+}
+
+.status-indicator[data-status='Cancel'] {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    font-weight: 700;
+}
+
+/* Action cell centering */
+.actions-cell {
+    display: table-cell;
+    vertical-align: middle !important;
+}
+
+.action-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+/* Table row styles */
+.slds-table tr {
+    background-color: #ffffff !important;
+    transition: background-color 0.1s linear;
+}
+
+.slds-table td {
+    padding: 8px !important;
+    height: 36px !important;
+    vertical-align: middle !important;
+}
+
+/* Remove first column border */
+.actions-column,
+.actions-cell {
+    border-right: none !important;
+}
+
+/* Actions column and trigger */
+.actions-column {
+    width: 40px !important;
+    min-width: 40px !important;
+    padding: 0 !important;
+}
+
+.actions-cell {
+    width: 40px;
+    padding: 0 !important;
+    vertical-align: middle;
+}
+
+.action-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    cursor: pointer;
+}
+
+.circle-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: #f3f3f3;
+    transition: all 0.2s;
+}
+
+.circle-button:hover {
+    background-color: #e5e5e5;
+}
+
+.arrow-icon {
+    width: 16px;
+    height: 16px;
+    color: #706e6b;
+}
+
+/* Dropdown menu */
+.action-dropdown {
+    position: absolute;
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    min-width: 120px;
+}
+
+.dropdown-item {
+    padding: 8px 16px;
+    cursor: pointer;
+    color: #444444;
+    transition: background-color 0.2s;
+    font-size: 13px;
+}
+
+.dropdown-item:hover {
+    background-color: #f3f3f3;
+}
+
+.dropdown-item.delete {
+    color: #ba0517;
+}
+
+.dropdown-item.delete:hover {
+    background-color: #fef1f1;
+}
+
+/* Individual column widths */
+.resizable-column[data-column='name'] {
+    width: 200px;
+    min-width: 200px;
+}
+
+.resizable-column[data-column='completed'],
+.resizable-column[data-column='score'] {
+    width: 160px;
+    min-width: 160px;
+}
+
+.resizable-column[data-column='status'] {
+    width: 120px;
+    min-width: 120px;
+}
+
+.resizable-column[data-column='submissionDate'] {
+    width: 180px;
+    min-width: 180px;
+}
+
+.resizable-column[data-column='followUp'] {
+    width: 220px;
+    min-width: 220px;
+}
+
+.resizable-column[data-column='reports'] {
+    width: 200px;
+    min-width: 200px;
+}
+
+/* Status indicator styling */
+.status-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #4bca81;
+}
+
+.status-indicator[data-status='Inactive'] .status-dot {
+    background-color: #706e6b;
+}
+
+.resize-handle {
+    position: absolute;
+    top: 0;
+    right: -2px;
+    bottom: 0;
+    width: 4px;
+    cursor: col-resize;
+    background-color: transparent;
+    transition: background-color 0.2s;
+    z-index: 2;
+}
+
+.resize-handle:hover,
+.resize-handle.resizing {
+    background-color: #6a31ea;
+}
+
+.slds-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 auto;
+}
+
+.pagination-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0;
+    background: white;
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    border-top: 1px solid #e5e5e5;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.pagination-text {
+    margin: 0 16px;
+    color: #706e6b;
+}
+
+.pagination-button {
+    display: flex;
+    align-items: center;
+    border: none;
+    justify-content: center;
+    border-radius: 48px;
+    background-color: #0066ff;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    height: 40px;
+}
+
+.pagination-button:hover {
+    background-color: #0052cc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.pagination-icon {
+    width: 31px;
+    height: 18px;
+    stroke: currentColor;
+}
+
+.arrow-icon {
+    width: 16px;
+    height: 16px;
+    color: #0066ff;
+}
+
+.circle-button:hover .arrow-icon {
+    color: #0052cc;
+}
+
+/* Table Container */
+.slds-table_container {
+    overflow-x: auto;
+}
+
+/* Table Styles */
+.slds-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.slds-table tr {
+    border-bottom: 2px solid #e5e5e5;
+}
+
+/* Even row styling */
+.slds-table tr:nth-child(even) {
+    background-color: #f0f0f0;
+}
+
+/* Header Styles */
+.slds-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #fff;
+    border-bottom: 1px solid #f3f3f3;
+    font-weight: 600;
+    line-height: 2rem;
+    padding: 0.5rem;
+}
+
+.slds-table th .slds-truncate {
+    font-size: 0.875rem;
+    color: #4b4b4b;
+}
+
+/* Cell Styles */
+.slds-table td {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    color: #4b4b4b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Row Styles */
+.slds-table tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.slds-table tbody tr:hover {
+    background-color: #f3f2f2;
+}
+
+/* Clickable Row Styles */
+.clickable-row {
+    cursor: pointer;
+    transition: background-color 0.1s linear;
+}
+
+.clickable-row[data-clicked-state='true'] {
+    background-color: #f3f3f3;
+}
+
+/* Selected Row Styles */
+.slds-table tbody tr.selected-row {
+    background-color: #f3f3f3 !important;
+}
+
+.slds-table tbody tr.selected-row:hover {
+    background-color: #eef1f6 !important;
+}
+
+/* Checkbox Styles */
+.slds-checkbox {
+    display: inline-block;
+    position: relative;
+}
+
+.slds-checkbox [type='checkbox'] {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    position: absolute;
+}
+
+.slds-checkbox [type='checkbox'] + .slds-checkbox__label {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    min-height: var(--lwc-squareIconUtilityMedium, 1.25rem);
+    line-height: normal;
+}
+
+.slds-checkbox [type='checkbox'] + .slds-checkbox__label .slds-checkbox_faux {
+    width: 1rem;
+    height: 1rem;
+    display: inline-block;
+    position: relative;
+    border: 1px solid #dddbda;
+    border-radius: 0.125rem;
+    background: white;
+    transition:
+        border 0.1s linear,
+        background-color 0.1s linear;
+}
+
+.slds-checkbox
+    [type='checkbox']:checked
+    + .slds-checkbox__label
+    .slds-checkbox_faux {
+    border-color: #0070d2;
+    background-color: #0070d2;
+}
+
+.slds-checkbox
+    [type='checkbox']:checked
+    + .slds-checkbox__label
+    .slds-checkbox_faux:after {
+    display: block;
+    content: '';
+    height: 0.25rem;
+    width: 0.5rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0) rotate(-45deg);
+    border-bottom: 2px solid #fff;
+    border-left: 2px solid #fff;
+}
+
+/* Action Cell Styles */
+.action-cell {
+    text-align: right;
+}
+
+.action-cell .slds-button-group {
+    display: inline-flex;
+}
+
+/* Button Styles */
+.slds-button-group {
+    display: flex;
+    align-items: center;
+}
+
+.slds-button_icon {
+    color: #5e5e5e;
+}
+
+.slds-button_icon:hover {
+    color: #4b088a;
+}
+
+/* Scrollbar Styles */
+.slds-scrollable_x {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.slds-scrollable_x::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.slds-scrollable_x::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.slds-scrollable_x::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.slds-scrollable_x::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .slds-table_container {
+        overflow-x: auto;
+    }
+
+    .slds-button-group {
+        flex-direction: column;
+    }
+}
+
+/* Table Container and Scrolling */
+.response-section {
+    position: relative;
+    background: white;
+    border-radius: 0.25rem;
+}
+
+.slds-table_container {
+    position: relative;
+    overflow-x: auto;
+    overflow-y: visible;
+    min-height: 0%;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+/* Ensure horizontal scrollbar is always visible */
+.slds-scrollable_x {
+    overflow-x: scroll !important;
+    overflow-y: visible;
+    scrollbar-width: thin; /* Firefox */
+    -ms-overflow-style: -ms-autohiding-scrollbar; /* IE/Edge */
+}
+
+/* Custom scrollbar styling */
+.slds-scrollable_x::-webkit-scrollbar {
+    height: 8px;
+    background-color: #dcdcdc;
+    border-radius: 4px;
+}
+
+.slds-scrollable_x::-webkit-scrollbar-thumb {
+    background-color: #a9a9a9;
+    border-radius: 4px;
+}
+
+.slds-scrollable_x::-webkit-scrollbar-thumb:hover {
+    background-color: #888888;
+}
+
+/* Table Base Styles */
+.slds-table {
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    margin-bottom: 8px; /* Space for scrollbar */
+}
+
+/* Column Headers */
+.slds-table th {
+    position: relative;
+    background-color: #e6f9e6;
+    border-bottom: 1px solid #f3f3f3;
+    font-weight: 600;
+    line-height: 2rem;
+    padding: 0.5rem;
+    color: #4b4b4b;
+}
+
+/* Column Resizing */
+.slds-table th:not(:last-child) {
+    border-right: 1px solid #e5e5e5;
+}
+
+.slds-resizable {
+    position: absolute;
+    right: -4px;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    cursor: col-resize;
+    z-index: 5000;
+    background-color: transparent;
+}
+
+.slds-resizable:hover,
+.slds-resizable:active {
+    background-color: #0070d2;
+    opacity: 0.5;
+}
+
+/* Header Text */
+.slds-th__action {
+    display: flex;
+    align-items: center;
+    padding: 0.25rem;
+    white-space: nowrap;
+    position: relative;
+}
+
+.slds-th__action .slds-truncate {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Table Rows */
+.slds-table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid #e5e5e5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.slds-table tr:hover {
+    background-color: #f3f3f3;
+}
+
+/* Card-like Row Styling */
+.slds-table tr {
+    box-shadow: 0 1px 0 0 #e5e5e5;
+    transition: box-shadow 0.2s ease;
+}
+
+.slds-table tr:hover {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    position: relative;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .slds-table_container {
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .slds-button-group {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Clickable Row Styles */
+.clickable-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.clickable-row:hover {
+    background-color: #f3f2f2;
+}
+
+.clickable-row[data-clicked='true'] {
+    background-color: #e8e8e8;
+}
+
+/* Ensure action buttons don't trigger row click */
+.action-cell {
+    pointer-events: none;
+}
+
+.action-cell .slds-button-group {
+    pointer-events: auto;
+}
+
+/* ===== Table Row Styles ===== */
+.slds-table tbody tr {
+    background-color: #ffffff !important;
+    transition: background-color 0.1s linear;
+}
+
+.slds-table tbody tr:hover > td {
+    background-color: #f9f9f9;
+}
+
+.slds-table tbody tr.selected-row:hover > td {
+    background-color: #eef1f6;
+}
+
+.column-width {
+    width: 150px;
+}
+
+.slds-text-title_caps {
+    font-size: 12px;
+    line-height: 1.25;
+    color: #706e6b;
+}
+
+.pagination-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0;
+    background: white;
+    margin-top: 8px;
+}
+
+.pagination-text {
+    margin-bottom: 8px;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    width: 100%;
+}
+
+/* Actions column and arrow */
+.actions-column {
+    width: 48px !important;
+    min-width: 48px !important;
+    padding: 0 !important;
+}
+
+.actions-cell {
+    width: 48px;
+    padding: 0 !important;
+    vertical-align: middle;
+}
+
+.action-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 100%;
+    transition: background-color 0.2s;
+}
+
+.action-arrow:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.arrow-icon {
+    width: 24px;
+    height: 24px;
+    color: #706e6b;
+}
+
+/* Status indicator styling */
+.status-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #4bca81; /* Default color for Active */
+}
+
+.status-indicator[data-status='Inactive'] .status-dot {
+    background-color: #706e6b;
+}
+
+/* Sort Icons */
+.sort-icons {
+    display: flex;
+    flex-direction: column;
+    margin-left: 4px;
+    height: 24px;
+}
+
+.sort-icon {
+    width: 24px;
+    height: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #706e6b;
+}
+
+.sort-icon:hover {
+    color: #0066ff;
+}
+
+.sort-icon.active {
+    color: #0066ff;
+}
+
+/* Checkbox column */
+.checkbox-column,
+.checkbox-cell {
+    width: 48px !important;
+    min-width: 48px !important;
+    padding: 0 !important;
+    vertical-align: middle;
+}
+
+/* Checkbox container */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 0 8px;
+}
+
+/* Checkbox styling */
+.slds-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    border: 2px solid #706e6b;
+    border-radius: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: white;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.slds-checkbox:checked {
+    background-color: #0066ff;
+    border-color: #0066ff;
+}
+
+.slds-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Selected row styling */
+.selected-row {
+    background-color: #e1e1e1 !important;
+}
+
+.selected-row:hover {
+    background-color: #d7d7d7 !important;
+}
+
+/* Action cell spacing */
+.actions-cell {
+    padding-right: 12px !important;
+}
+
+/* Row hover effect */
+.slds-hint-parent:hover {
+    background-color: #f9f9f9;
+}
+
+.selected-row.slds-hint-parent:hover {
+    background-color: #ebebeb !important;
+}
+
+/* Row styling */
+.slds-hint-parent {
+    background-color: #ffffff;
+}
+
+.slds-hint-parent:nth-child(even) {
+    background-color: #ffffff;
+}
+
+/* Delete Selected Button */
+.delete-selected-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #dc3545;
+    border: none;
+    border-radius: 40px;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.2s;
+    min-width: 140px;
+    height: 40px;
+    opacity: 0;
+    pointer-events: none;
+    margin: 0 8px;
+}
+
+.delete-selected-button.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.delete-selected-button:hover {
+    background-color: #c82333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Restore button */
+.restore-button {
+    background-color: #0066ff !important;
+}
+
+.restore-button:hover {
+    background-color: #0066ff !important;
+}
+
+/* Default column widths */
+.default-column-width {
+    transition: width 0.3s ease;
+}
+
+.resizable-column[data-column='name'] {
+    width: 200px;
+    min-width: 200px;
+}
+
+.resizable-column[data-column='completed'],
+.resizable-column[data-column='score'] {
+    width: 160px;
+    min-width: 160px;
+}
+
+.resizable-column[data-column='status'] {
+    width: 120px;
+    min-width: 120px;
+}
+
+.resizable-column[data-column='submissionDate'] {
+    width: 180px;
+    min-width: 180px;
+}
+
+.resizable-column[data-column='followUp'] {
+    width: 220px;
+    min-width: 220px;
+}
+
+.resizable-column[data-column='reports'] {
+    width: 200px;
+    min-width: 200px;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.header-row .section-header {
+    margin: 0;
+}
+
+.header-row .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+.clickable-name {
+    color: #0070d2;
+    cursor: pointer;
+    text-decoration: underline;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.clickable-name:hover {
+    text-decoration: none;
+}

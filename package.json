@@ -14,7 +14,6 @@
         "fastify": "^5.2.2",
         "jsforce": "^3.8.2",
         "lightning-base-components": "^1.27.2-alpha",
-        "@salesforce/lightning-base-components": "^1.27.2-alpha",
         "lwc": "^8.12.7",
         "lwc-recipes-oss-ui-components": "^0.3.2",
         "lwr": "^0.16.11",
@@ -48,7 +47,8 @@
         "lint-staged": "^15.5.0",
         "prettier": "^3.4.2",
         "rimraf": "^6.0.1",
-        "webpack-node-externals": "^3.0.0"
+        "webpack-node-externals": "^3.0.0",
+        "workbox-cli": "^7.3.0"
     },
     "homepage": "https://github.com/trailheadapps/lwc-recipes-oss",
     "keywords": [
@@ -57,7 +57,8 @@
     "license": "CC0-1.0",
     "repository": "trailheadapps/lwc-recipes-oss",
     "scripts": {
-        "build": "lwr build",
+        "build": "lwr build && npm run inject-sw",
+        "inject-sw": "workbox injectManifest workbox-config.js",
         "clean": "rimraf __lwr_cache__ && rimraf site",
         "dev": "lwr dev",
         "lint": "eslint **/src/**/*.js",

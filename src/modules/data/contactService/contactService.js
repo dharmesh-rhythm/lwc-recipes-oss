@@ -16,7 +16,6 @@ export function getContacts() {
  * @param {String} id Contact Id
  * @returns {Promise} Promise with the contact
  */
-
 export function getContact(id) {
     return Promise.resolve(_contacts.find((contact) => contact.id === id));
 }

@@ -1,30 +1,33 @@
 <template>
-    <!-- Record Type Selection Modal -->
-    <template lwc:if={showRecordTypeModal}>
+    <section class="slds-p-around_medium page-background">
+        <c-assessment-list></c-assessment-list>
+    </section>
+    <!-- Record Type Selection Modal 
+     <template lwc:if={showRecordTypeModal}>
         <c-record-type-modal
             onclose={handleCloseRecordTypeModal}
             onselect={handleRecordTypeSelect}
         ></c-record-type-modal>
-    </template>
+    </template> 
 
-    <!-- Assessment Modal -->
-    <template lwc:if={showAssessmentModal}>
+     Assessment Modal 
+     <template lwc:if={showAssessmentModal}>
         <c-assessment-modal
             onclose={handleCloseAssessmentModal}
             onsave={handleSaveAssessment}
             record-type={selectedRecordType}
         ></c-assessment-modal>
-    </template>
+    </template> 
 
-    <!-- Assessment Area Modal -->
-    <template lwc:if={showAssessmentAreaModal}>
+     Assessment Area Modal 
+     <template lwc:if={showAssessmentAreaModal}>
         <c-assessment-area-modal
             onclose={handleCloseAssessmentAreaModal}
             onsave={handleSaveAssessment}
         ></c-assessment-area-modal>
-    </template>
+    </template> 
 
-    <div class="card-container">
+     <div class="card-container">
         <div class="header-container">
             <div class="title-with-icon">
                 <span class="assessment-icon-container">
@@ -37,7 +40,7 @@
                 <h2 class="assessment-title">Assessment Types</h2>
             </div>
             <button class="new-button" onclick={handleNewClick}>
-                <!-- <span class="new-icon">+</span> -->
+                 <span class="new-icon">+</span> 
                 New
             </button>
         </div>
@@ -52,5 +55,5 @@
                 ondataloaded={handleDataLoaded}
             ></c-assessment-type>
         </div>
-    </div>
+    </div> -->
 </template>

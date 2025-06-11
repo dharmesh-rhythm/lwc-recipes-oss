@@ -2,16 +2,12 @@ import { LightningElement, track, api } from 'lwc';
 import * as accountService from 'c/accountService';
 import * as contactService from 'c/contactService';
 import { isOnline } from 'c/utils';
-import pubsub from 'c/pubsub';
-import userDataService from 'c/userDataService';
 
 const VIEW_STATES = {
     LIST: 'list',
     FORM: 'form',
     DETAIL: 'detail'
 };
-
-const STORAGE_KEY = 'accountManagerMessage';
 
 export default class AccountManager extends LightningElement {
     @track accounts = [];
@@ -29,13 +25,7 @@ export default class AccountManager extends LightningElement {
     @track offlineAccountIds = [];
     @api hideNewButton = false;
 
-    // Message handling
-    @track receivedMessage = '';
-
-    @track userData = null;
-
     // Getters for form and UI
-
     get formTitle() {
         return this.isNew ? 'New Account' : 'Edit Account';
     }
@@ -87,25 +77,9 @@ export default class AccountManager extends LightningElement {
             'offline',
             this.handleOnlineStatusChange.bind(this)
         );
-
-        // Subscribe to messages from Component A
-        pubsub.subscribe('accountUpdate', this.handleAccountUpdate.bind(this));
-
-        // Subscribe to user data updates
-        pubsub.subscribe(
-            'userDataUpdate',
-            this.handleUserDataUpdate.bind(this)
-        );
-
-        // Load persisted message if exists
-        this.loadPersistedMessage();
-
-        // Load any existing user data
-        this.loadExistingUserData();
     }
 
     disconnectedCallback() {
-        // Remove event listeners
         window.removeEventListener(
             'online',
             this.handleOnlineStatusChange.bind(this)
@@ -113,12 +87,6 @@ export default class AccountManager extends LightningElement {
         window.removeEventListener(
             'offline',
             this.handleOnlineStatusChange.bind(this)
-        );
-
-        // Unsubscribe from pubsub
-        pubsub.unsubscribe(
-            'userDataUpdate',
-            this.handleUserDataUpdate.bind(this)
         );
     }
 
@@ -533,44 +501,5 @@ export default class AccountManager extends LightningElement {
             hour: '2-digit',
             minute: '2-digit'
         }).format(date);
-    }
-
-    handleAccountUpdate(message) {
-        this.receivedMessage = message.data;
-        // Persist the message
-        this.saveMessageToStorage(message.data);
-        console.log('Received and stored message from Component A:', message);
-    }
-
-    // Load message from localStorage
-    loadPersistedMessage() {
-        const savedMessage = localStorage.getItem(STORAGE_KEY);
-        if (savedMessage) {
-            this.receivedMessage = savedMessage;
-        }
-    }
-
-    // Save message to localStorage
-    saveMessageToStorage(message) {
-        if (message) {
-            localStorage.setItem(STORAGE_KEY, message);
-        }
-    }
-
-    // Load existing user data from storage
-    loadExistingUserData() {
-        const storedData = userDataService.getStoredUserData();
-        if (storedData) {
-            this.userData = storedData;
-        }
-    }
-
-    // Handle user data updates
-    handleUserDataUpdate(message) {
-        if (message.type === 'update') {
-            this.userData = message.data;
-        } else if (message.type === 'clear') {
-            this.userData = null;
-        }
     }
 }

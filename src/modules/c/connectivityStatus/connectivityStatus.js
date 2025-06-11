@@ -1,4 +1,4 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import {
     isOnline,
     addConnectivityListener,
@@ -46,6 +46,7 @@ export default class ConnectivityStatus extends LightningElement {
     }
 
     // Explicitly handle going online
+    @api
     handleOnline() {
         this.isOnline = true;
         this.showToast = true;
@@ -58,9 +59,11 @@ export default class ConnectivityStatus extends LightningElement {
 
         // Check pending operations
         this.checkPendingOperations();
+        console.log('🟢 [ConnectivityStatus] Online');
     }
 
     // Explicitly handle going offline
+    @api
     handleOffline() {
         this.isOnline = false;
         this.showToast = true;
@@ -74,6 +77,7 @@ export default class ConnectivityStatus extends LightningElement {
 
         // Check pending operations
         this.checkPendingOperations();
+        console.log('🔴 [ConnectivityStatus] Offline');
     }
 
     handleConnectivityChange(onlineStatus) {
@@ -87,14 +91,17 @@ export default class ConnectivityStatus extends LightningElement {
             this.handleOffline();
         }
     }
-
+    @api
     handleSyncStart() {
         this.syncStatus = 'syncing';
         this.syncMessage = 'Syncing your changes...';
         this.showToast = true;
+        console.log('🔄 [ConnectivityStatus] Sync started');
     }
 
+    @api
     handleSyncComplete(event) {
+        console.log('✅ [ConnectivityStatus] Sync complete', event);
         const { synced, total, message, variant } = event.detail || {
             synced: 0,
             total: 0
@@ -128,7 +135,9 @@ export default class ConnectivityStatus extends LightningElement {
         }, 3000);
     }
 
+    @api
     handleSyncError(event) {
+        console.error('❌ [ConnectivityStatus] Sync error', event);
         const { message } = event.detail || { message: 'Unknown error' };
 
         this.syncStatus = 'error';

@@ -1,0 +1,352 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        aria-modal="true"
+        class="slds-modal slds-fade-in-open"
+    >
+        <div class="slds-modal__container">
+            <!-- Modal Header -->
+            <header class="slds-modal__header">
+                <button
+                    class="slds-button slds-modal__close"
+                    title="Close"
+                    onclick={handleCancel}
+                >
+                    <span class="close-icon" onclick={handleClose} title="Close"
+                        >✖</span
+                    >
+                </button>
+                <h2 class="slds-text-heading_medium">New Assessment Finding</h2>
+            </header>
+
+            <!-- Modal Body -->
+            <div class="slds-modal__content slds-p-around_medium">
+                <div class="slds-box slds-theme_default">
+                    <!-- Information Section -->
+                    <div class="highlighted-section">
+                        <h2>Information</h2>
+                    </div>
+
+                    <!-- Grid Row 1 -->
+                    <div
+                        class="slds-grid slds-wrap slds-gutters slds-m-top_medium"
+                    >
+                        <!-- Assessment Findings Name -->
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="slds-form-element slds-is-required">
+                                <label
+                                    class="slds-form-element__label"
+                                    for="findingName"
+                                    >Assessment Findings Name</label
+                                >
+                                <div class="slds-form-element__control">
+                                    <input
+                                        type="text"
+                                        id="findingName"
+                                        class="slds-input"
+                                        value={findingName}
+                                        oninput={handleNameInput}
+                                        required
+                                    />
+                                </div>
+                                <template if:true={showNameError}>
+                                    <div class="slds-form-element__help">
+                                        Complete this field.
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Assessment Question -->
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="slds-form-element">
+                                <label
+                                    class="slds-form-element__label"
+                                    for="assessmentQuestion"
+                                    >Assessment Question</label
+                                >
+                                <div
+                                    class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right"
+                                >
+                                    <input
+                                        type="text"
+                                        id="assessmentQuestion"
+                                        class="slds-input"
+                                        placeholder="Search Questions..."
+                                    />
+                                    <span
+                                        class="slds-icon_container slds-input__icon slds-input__icon_right"
+                                    >
+                                        <!-- <lightning-icon
+                                            icon-name="utility:search"
+                                            size="x-small"
+                                        ></lightning-icon> -->
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grid Row 2 -->
+                    <div
+                        class="slds-grid slds-wrap slds-gutters slds-m-top_medium"
+                    >
+                        <!-- Finding Type -->
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="slds-form-element slds-is-required">
+                                <label
+                                    class="slds-form-element__label"
+                                    for="findingType"
+                                    >Finding Type</label
+                                >
+                                <div class="slds-form-element__control">
+                                    <select
+                                        class="slds-select"
+                                        id="findingType"
+                                        onchange={handleFindingTypeChange}
+                                    >
+                                        <option value="">--None--</option>
+                                        <option value="Major Non-Conformance">
+                                            Major Non-Conformance
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Repeat Finding -->
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="slds-form-element">
+                                <label
+                                    class="slds-form-element__label"
+                                    for="repeatFinding"
+                                    >Repeat Finding</label
+                                >
+                                <div class="slds-form-element__control">
+                                    <select
+                                        class="slds-select"
+                                        id="repeatFinding"
+                                        onchange={handleRepeatFindingChange}
+                                    >
+                                        <option value="">--None--</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grid Row 3 -->
+                    <div
+                        class="slds-grid slds-wrap slds-gutters slds-m-top_medium"
+                    >
+                        <!-- Root Cause -->
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="slds-form-element">
+                                <label
+                                    class="slds-form-element__label"
+                                    for="rootCause"
+                                    >Root Cause</label
+                                >
+                                <div class="slds-form-element__control">
+                                    <select
+                                        class="slds-select"
+                                        id="rootCause"
+                                        onchange={handleRootCauseChange}
+                                    >
+                                        <option value="">--None--</option>
+                                        <option value="Training">
+                                            Training
+                                        </option>
+                                        <option value="System">System</option>
+                                        <option value="Costs">Costs</option>
+                                        <option value="Lackofworkers">
+                                            Lack of workers
+                                        </option>
+                                        <option value="PoorDocumentations">
+                                            Poor Documentations
+                                        </option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Resolution Time Frame -->
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="slds-form-element">
+                                <label
+                                    class="slds-form-element__label"
+                                    for="resolutionTime"
+                                    >Resolution Time Frame</label
+                                >
+                                <div class="slds-form-element__control">
+                                    <select
+                                        class="slds-select"
+                                        id="resolutionTime"
+                                        onchange={handleResolutionChange}
+                                    >
+                                        <option value="">--None--</option>
+                                        <option value="Immediate">
+                                            Immediate
+                                        </option>
+                                        <option value="60_days">30 days</option>
+                                        <option value="60_days">60 days</option>
+                                        <option value="90_days">90 days</option>
+                                        <option value="120_days">
+                                            120 days
+                                        </option>
+                                        <option value="180_days">
+                                            180 days
+                                        </option>
+                                        <option value="365_days">
+                                            365 days
+                                        </option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grid Row 4 -->
+                    <div
+                        class="slds-grid slds-wrap slds-gutters slds-m-top_medium"
+                    >
+                        <!-- Assessment -->
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="slds-form-element slds-is-required">
+                                <label
+                                    class="slds-form-element__label"
+                                    for="assessment"
+                                    >Assessment</label
+                                >
+                                <div class="slds-form-element__control">
+                                    <span class="slds-pill">
+                                        <span class="slds-pill__label"
+                                            >Assessment 04-06</span
+                                        >
+                                        <button
+                                            class="slds-button slds-button_icon slds-pill__remove"
+                                            title="Remove"
+                                        >
+                                            <svg
+                                                class="slds-icon slds-icon_xx-small"
+                                                focusable="false"
+                                                aria-hidden="true"
+                                                viewBox="0 0 52 52"
+                                                style="
+                                                    width: 12px;
+                                                    height: 12px;
+                                                    fill: currentColor;
+                                                "
+                                            >
+                                                <path
+                                                    d="M29.41 26l16.3-16.29a3 3 0 00-4.24-4.24L26 21.59 9.71 5.29a3 3 0 00-4.24 4.24L21.59 26 5.29 42.29a3 3 0 004.24 4.24L26 30.41l16.29 16.3a3 3 0 004.24-4.24z"
+                                                ></path>
+                                            </svg>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="slds-form-element slds-is-required">
+                                <label
+                                    class="slds-form-element__label"
+                                    for="status"
+                                    >Status</label
+                                >
+                                <div class="slds-form-element__control">
+                                    <select
+                                        class="slds-select"
+                                        id="status"
+                                        onchange={handleStatusChange}
+                                    >
+                                        <option value="">--None--</option>
+                                        <option value="Open">Open</option>
+                                        <option value="Closed">Closed</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Information Section Inside the Box -->
+                    <div class="slds-m-top_large">
+                        <div class="highlighted-section">
+                            <h2>System Information</h2>
+                        </div>
+
+                        <div
+                            class="slds-grid slds-wrap slds-gutters slds-m-top_small"
+                        >
+                            <div class="slds-col slds-size_1-of-2">
+                                <p class="system-label">Created By</p>
+                                <p>{createdBy}</p>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <p class="system-label">Last Modified By</p>
+                                <p>{lastModifiedBy}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons (Outside the box but inside modal content) -->
+                <div class="action-buttons">
+                    <button
+                        class="action-button cancel-button"
+                        onclick={handleCancel}
+                    >
+                        <svg class="button-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M6 6l12 12M6 18L18 6"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                        <span>Cancel</span>
+                    </button>
+                    <button
+                        class="action-button save-new-button"
+                        onclick={handleSaveAndNew}
+                    >
+                        <svg class="button-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M12 5v14m-7-7h14"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                        <span>Save & New</span>
+                    </button>
+                    <button
+                        class="action-button save-button"
+                        onclick={handleSave}
+                    >
+                        <svg class="button-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M5 12h14M5 12l5 5M5 12l5-5"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                        <span>Save</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>

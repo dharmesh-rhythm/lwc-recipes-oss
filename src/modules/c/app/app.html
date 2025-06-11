@@ -12,13 +12,8 @@
             <!-- Connectivity status bar -->
             <c-connectivity-status></c-connectivity-status>
 
-            <!-- PubSub Test Components -->
-            <!-- <div class="pubsub-test slds-m-around_medium">
-                <c-comp-a></c-comp-a>
-            </div> -->
-
             <!-- Account view -->
-            <template lwc:if={isAccountView}>
+            <!-- <template lwc:if={isAccountView}>
                 <div class="search-box-container">
                     <div class="search-box">
                         <span class="search-icon">
@@ -37,12 +32,12 @@
                 </div>
 
                 <div class="card-list">
-                    <!-- Hiding the large create button as requested -->
-                    <!-- 
+                     Hiding the large create button as requested 
+                     
                     <button class="create-button" onclick={handleNewAccount}>
                         <span class="plus-icon">+</span> Create New Account
                     </button>
-                    -->
+                    
 
                     <div class="accounts-list">
                         <template lwc:if={isLoading}>
@@ -69,10 +64,10 @@
                         </template>
                     </div>
                 </div>
-            </template>
+            </template> -->
 
             <!-- Contact view -->
-            <template lwc:if={isContactView}>
+            <!-- <template lwc:if={isContactView}>
                 <div class="search-box-container">
                     <div class="search-box">
                         <span class="search-icon">
@@ -91,12 +86,12 @@
                 </div>
 
                 <div class="card-list">
-                    <!-- Hiding the large create button as requested -->
-                    <!-- 
+                     Hiding the large create button as requested 
+                     
                     <button class="create-button" onclick={handleNewContact}>
                         <span class="plus-icon">+</span> Create New Contact
                     </button>
-                    -->
+                    
 
                     <div class="contacts-list">
                         <template lwc:if={isLoading}>
@@ -123,7 +118,7 @@
                         </template>
                     </div>
                 </div>
-            </template>
+            </template> -->
 
             <!-- Checklist view -->
             <template lwc:if={isChecklistView}>
@@ -222,11 +217,7 @@
                 <div class="nav-icon contacts-icon"></div>
                 <div class="nav-label">Contacts</div>
             </div>
-            <div class={checklistTabClass} onclick={handleViewChecklists}>
-                <div class="nav-icon checklist-icon"></div>
-                <div class="nav-label">Checklists</div>
-            </div>
-            <div class={assessmentTabClass} onclick={handleViewAssessments}>
+            <div class="nav-item" onclick={handleViewAssessments}>
                 <div class="nav-icon assessments-icon"></div>
                 <div class="nav-label">Assessments</div>
             </div>

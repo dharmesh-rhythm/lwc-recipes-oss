@@ -1,96 +1,91 @@
-// Register event listeners for connectivity changes
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('🌐 Initializing offline sync functionality');
+// src/assets/js/offline-sync.js
 
-    // Listen for app specific connectivity events
-    document.body.addEventListener('app_online', handleOnlineEvent);
-    document.body.addEventListener('app_offline', handleOfflineEvent);
+(function () {
+    console.log('✅ offline-sync.js loaded');
 
-    // Listen for sync events from service worker
-    document.body.addEventListener('sync-from-service-worker', handleSyncEvent);
-
-    // Listen for visibility changes to trigger sync when tab becomes visible
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    // Listen for native online/offline events
-    window.addEventListener('online', handleOnlineEvent);
-    window.addEventListener('offline', handleOfflineEvent);
-
-    // Initial connectivity check
-    checkConnectivity();
-});
-
-// Function to check connectivity
-function checkConnectivity() {
-    const isOnline = navigator.onLine;
-    console.log(
-        `🌐 Current connectivity status: ${isOnline ? 'Online' : 'Offline'}`
-    );
-
-    // If online, try to sync any pending operations
-    if (isOnline) {
-        triggerSync();
+    // Check for globals
+    if (!window.offlineUtils || !window.syncHandlers) {
+        console.error(
+            '❌ offline-sync.js: Required globals missing (offlineUtils or syncHandlers)'
+        );
+        return;
     }
-}
 
-// Handle online events - no need to use the event parameter
-function handleOnlineEvent() {
-    console.log('🌐 App has detected online connectivity');
+    const {
+        // getPendingOperations,
+        // deletePendingOperation,
+        isOnline
+    } = window.offlineUtils;
+    // const syncHandlers = window.syncHandlers;
 
-    // When we come back online, attempt to sync pending operations
-    triggerSync();
-}
+    // async function performSync() {
+    //     if (!isOnline()) {
+    //         console.log('📴 Still offline — skipping sync');
+    //         return;
+    //     }
 
-// Handle offline events - no need to use the event parameter
-function handleOfflineEvent() {
-    console.log(
-        '🌐 App has detected offline state, operations will be stored locally'
-    );
-}
+    //     const operations = await getPendingOperations();
+    //     console.log('📦 Pending operations:', operations);
 
-// Handle sync request events - no need to use the event parameter
-function handleSyncEvent() {
-    console.log(
-        '🔄 Sync requested from service worker, processing pending operations'
-    );
-    // Perform actual sync operations here without triggering another sync event
-    performSync();
-}
+    //     if (!operations.length) {
+    //         console.log('✅ No operations to sync');
+    //         return;
+    //     }
 
-// Handle visibility change events
-function handleVisibilityChange() {
-    if (document.visibilityState === 'visible') {
-        console.log('🔄 Page became visible, checking for pending operations');
-        if (navigator.onLine) {
-            triggerSync();
+    //     const sortedOps = operations.sort(
+    //         (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+    //     );
+
+    //     for (const op of sortedOps) {
+    //         const { type, data, id } = op;
+    //         console.log(`🔄 Processing operation: ${type} (ID: ${id})`);
+
+    //         const handler = syncHandlers[`sync${type}`];
+    //         if (typeof handler !== 'function') {
+    //             console.warn(`⚠️ No sync handler found for type: ${type}`);
+    //             continue;
+    //         }
+
+    //         try {
+
+    //             console.log(`✅ Synced & removed operation: ${type} (ID: ${id})`);
+    //         } catch (err) {
+    //             console.error(
+    //                 `❌ Failed to sync operation ${type} (ID: ${id}):`,
+    //                 err.message || err
+    //             );
+    //         }
+    //     }
+    // }
+
+    // Register sync triggers
+    document.body.addEventListener('sync-pending-operations', () => {
+        console.log('🔁 sync-pending-operations event received');
+        // performSync();
+    });
+
+    window.addEventListener('online', () => {
+        console.log('🌐 Network online event detected, triggering sync');
+        // performSync();
+    });
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible' && isOnline()) {
+            console.log('👁️ Page visible and online, triggering sync');
+            // performSync();
         }
-    }
-}
+    });
 
-// Perform actual sync operations
-function performSync() {
-    console.log('🔄 Processing pending operations');
-    // Your actual sync logic here
-    // This function should NOT dispatch another sync event
-}
-
-// Trigger sync operations
-function triggerSync() {
-    console.log('🔄 Triggering sync for pending operations');
-
-    // Only dispatch an event to the service worker, not to the page itself
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage({
-            type: 'SYNC_PENDING_OPERATIONS'
-        });
+    // Trigger initial check
+    if (isOnline()) {
+        console.log('🚀 App started online, triggering initial sync');
+        // performSync();
     } else {
-        // No service worker, perform sync directly
-        performSync();
+        console.log('📴 App started offline, will wait to sync');
     }
-}
 
-// Export functions for use in other scripts
-window.offlineSync = {
-    checkConnectivity,
-    triggerSync
-};
+    // Expose to global if needed
+    window.offlineSync = {
+        // performSync
+    };
+})();

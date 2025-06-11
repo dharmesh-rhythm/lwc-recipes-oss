@@ -1,71 +1,826 @@
 <template>
+    <template lwc:if={showDetailPage}>
+        <c-assessment-page
+            record-id={selectedAssessmentId}
+            onback={handleBackToList}
+        ></c-assessment-page>
+    </template>
     <div class="assessment-list-container">
+        <!-- Toast notification -->
+        <template if:true={toastInfo.visible}>
+            <div class={toastClass}>
+                <div class="toast-content">
+                    <strong>{toastInfo.title}</strong>: {toastInfo.message}
+                    <button class="toast-close-btn" onclick={hideToast}>
+                        &times;
+                    </button>
+                </div>
+            </div>
+        </template>
+
         <div class="header">
-            <h2 class="title">Assessment List</h2>
-            <p class="subtitle">
-                View all assessments with their current status and details
-            </p>
+            <div class="header-content">
+                <h2 class="title">{assessments.length} Assessments</h2>
+                <div class="header-actions">
+                    <div class="search-container">
+                        <input
+                            type="text"
+                            class="search-input"
+                            placeholder="Search assessments..."
+                            oninput={handleSearch}
+                            value={searchTerm}
+                        />
+                        <div class="search-icon">🔍</div>
+                    </div>
+                    <div class="showing-text">
+                        Showing {formattedAssessments.length} of
+                        {assessments.length} results
+                    </div>
+                </div>
+            </div>
+            <!-- Toolbar with additional functionality -->
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <button
+                        class="toolbar-btn filter-btn"
+                        onclick={handleFilter}
+                    >
+                        🔽 Filter
+                    </button>
+                    <button
+                        class="toolbar-btn group-btn slds-hide_small slds-show_medium slds-show_large"
+                        onclick={handleGroupBy}
+                    >
+                        📊 Group by
+                    </button>
+                    <button
+                        class="toolbar-btn bulk-btn slds-hide_small slds-show_medium slds-show_large"
+                        onclick={handleBulkActions}
+                    >
+                        📋 Bulk actions
+                    </button>
+                    <button
+                        class="toolbar-btn customize-btn slds-hide_small slds-show_medium slds-show_large"
+                        onclick={handleCustomizeTable}
+                    >
+                        ⚙️ Customize table
+                    </button>
+                </div>
+
+                <div class="toolbar-right">
+                    <div
+                        class="view-options slds-hide_small slds-show_medium slds-show_large"
+                    >
+                        <button
+                            class="view-btn list-view active"
+                            onclick={handleListView}
+                        >
+                            ☰
+                        </button>
+                        <button
+                            class="view-btn card-view"
+                            onclick={handleCardView}
+                        >
+                            ⊞
+                        </button>
+                    </div>
+                    <button
+                        class="toolbar-btn export-btn slds-hide_small slds-show_medium slds-show_large"
+                        onclick={handleExport}
+                    >
+                        📤 Export
+                    </button>
+                    <button
+                        class="primary-btn create-btn"
+                        onclick={handleCreateAssessment}
+                    >
+                        ➕ Create assessment
+                    </button>
+                    <button
+                        class="menu-btn slds-hide_small slds-show_medium slds-show_large"
+                        onclick={handleMoreActions}
+                    >
+                        ⋯
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <div class="table-container">
-            <table class="assessment-table">
-                <thead>
-                    <tr>
-                        <th>Assessment Name</th>
-                        <th>Checklist Name</th>
-                        <th>Associated Customer</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
+        <!-- Loading State -->
+        <template if:true={isLoading}>
+            <div class="loading-container">
+                <div class="loading-spinner"></div>
+                <p class="loading-text">Loading assessments...</p>
+            </div>
+        </template>
+
+        <!-- Error State -->
+        <template if:true={error}>
+            <div class="error-container">
+                <div class="error-message">
+                    <h3>Error Loading Assessments</h3>
+                    <p>{error}</p>
+                    <button class="retry-btn" onclick={loadAssessments}>
+                        Retry
+                    </button>
+                </div>
+            </div>
+        </template>
+        <!-- Data Table -->
+        <template if:false={isLoading}>
+            <template if:false={error}>
+                <!-- View switcher for iPad/tablet -->
+                <div
+                    class="view-switcher slds-hide_small slds-hide_large slds-show_medium"
+                >
+                    <div class="view-switcher-container">
+                        <button
+                            class="switcher-btn list-btn"
+                            onclick={showListView}
+                            class:selected={isListView}
+                        >
+                            List View
+                        </button>
+                        <button
+                            class="switcher-btn card-btn"
+                            onclick={showCardView}
+                            class:selected={isCardView}
+                        >
+                            Card View
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Data Table (Desktop Only) -->
+                <!-- <div
+                    class="assessment-table slds-hide_small slds-hide_large slds-show_medium"
+                    if:true={isListView}
+                >
+                    <div class="table-header">
+                        <div class="header-cell">
+                            <input
+                                type="checkbox"
+                                class="select-all-checkbox"
+                                onchange={handleSelectAll}
+                            />
+                        </div>
+                        <div class="header-cell">Assessment Name</div>
+                        <div class="header-cell">Checklist Name</div>
+                        <div class="header-cell">Associated Customer</div>
+                        <div class="header-cell">Start Date</div>
+                        <div class="header-cell">End Date</div>
+                        <div class="header-cell">Status</div>
+                    </div>
+
+                    <div class="assessment-cards">
+                        <template
+                            for:each={formattedAssessments}
+                            for:item="assessment"
+                        >
+                            <div key={assessment.id} class="assessment-card">
+                                <div class="card-row">
+                                    <div class="checkbox-cell">
+                                        <input
+                                            type="checkbox"
+                                            class="row-checkbox"
+                                            data-id={assessment.id}
+                                            onchange={handleRowSelect}
+                                        />
+                                    </div>
+
+                                    <div class="assessment-info">
+                                        {assessment.assessmentName}
+                                    </div>
+
+                                    <div class="field-value">
+                                        {assessment.checklistName}
+                                    </div>
+
+                                    <div class="field-value">
+                                        {assessment.associatedCustomer}
+                                    </div>
+
+                                    <div class="field-value">
+                                        {assessment.formattedStartDate}
+                                    </div>
+                                    <div class="field-value">
+                                        {assessment.formattedEndDate}
+                                    </div>
+
+                                    <div class="status-info">
+                                        <span class="status-in-progress">
+                                            In Progress
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div> -->
+
+                <!-- Card Grid View (iPad/Tablet Only) -->
+                <div
+                    class="tablet-card-grid slds-hide_small slds-hide_large slds-show_medium"
+                    if:true={isCardView}
+                >
+                    <div class="tablet-grid-container">
+                        <template
+                            for:each={formattedAssessments}
+                            for:item="assessment"
+                        >
+                            <div key={assessment.id} class="tablet-card">
+                                <div class="tablet-card-header">
+                                    <div class="tablet-card-checkbox">
+                                        <input
+                                            type="checkbox"
+                                            class="tablet-card-checkbox-input"
+                                            data-id={assessment.id}
+                                            onchange={handleRowSelect}
+                                            onclick={stopPropagation}
+                                        />
+                                    </div>
+                                    <div class="tablet-card-title-container">
+                                        <h3 class="tablet-card-title">
+                                            {assessment.assessmentName}
+                                        </h3>
+                                    </div>
+                                    <div class="tablet-card-menu">
+                                        <button
+                                            class="tablet-card-menu-btn"
+                                            onclick={stopPropagation}
+                                        >
+                                            ⋯
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="tablet-card-body">
+                                    <div class="tablet-card-row">
+                                        <div class="tablet-card-label">
+                                            Checklist:
+                                        </div>
+                                        <div class="tablet-card-value">
+                                            {assessment.checklistName}
+                                        </div>
+                                    </div>
+                                    <div class="tablet-card-row">
+                                        <div class="tablet-card-label">
+                                            Customer:
+                                        </div>
+                                        <div class="tablet-card-value">
+                                            {assessment.associatedCustomer}
+                                        </div>
+                                    </div>
+                                    <div class="tablet-card-row">
+                                        <div class="tablet-card-label">
+                                            Timeline:
+                                        </div>
+                                        <div class="tablet-card-value">
+                                            {assessment.formattedStartDate} -
+                                            {assessment.formattedEndDate}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tablet-card-footer">
+                                    <div class="tablet-card-status">
+                                        <span
+                                            class="status-badge status-in-progress"
+                                            >In Progress</span
+                                        >
+                                    </div>
+                                    <div class="tablet-card-actions">
+                                        <button
+                                            class="tablet-action-btn view-btn"
+                                            data-id={assessment.id}
+                                            onclick={handleViewAssessment}
+                                        >
+                                            View
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Data Table (Desktop Only) -->
+                <div
+                    class="assessment-table slds-hide_small slds-show_medium slds-show_large"
+                    if:false={isCardView}
+                >
+                    <div class="table-header">
+                        <div class="header-cell">
+                            <input
+                                type="checkbox"
+                                class="select-all-checkbox"
+                                onchange={handleSelectAll}
+                            />
+                        </div>
+                        <div class="header-cell">Assessment Name</div>
+                        <div class="header-cell">Checklist Name</div>
+                        <div class="header-cell">Associated Customer</div>
+                        <div class="header-cell">Start Date</div>
+                        <div class="header-cell">End Date</div>
+                        <div class="header-cell">Status</div>
+                    </div>
+
+                    <div class="assessment-cards">
+                        <template
+                            for:each={formattedAssessments}
+                            for:item="assessment"
+                        >
+                            <div key={assessment.id} class="assessment-card">
+                                <div class="card-row">
+                                    <div class="checkbox-cell">
+                                        <input
+                                            type="checkbox"
+                                            class="row-checkbox"
+                                            data-id={assessment.id}
+                                            onchange={handleRowSelect}
+                                        />
+                                    </div>
+
+                                    <!-- <div class="assessment-info">
+                                        {assessment.assessmentName}
+                                    </div> -->
+                                    <div class="assessment-info">
+                                        <a
+                                            href="#"
+                                            onclick={handleViewAssessment}
+                                            data-id={assessment.id}
+                                        >
+                                            {assessment.assessmentName}
+                                        </a>
+                                    </div>
+
+                                    <div class="field-value">
+                                        {assessment.checklistName}
+                                    </div>
+
+                                    <div class="field-value">
+                                        {assessment.associatedCustomer}
+                                    </div>
+
+                                    <div class="field-value">
+                                        {assessment.formattedStartDate}
+                                    </div>
+                                    <div class="field-value">
+                                        {assessment.formattedEndDate}
+                                    </div>
+
+                                    <div class="status-info">
+                                        <span class="status-in-progress">
+                                            In Progress
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <!-- Card List (Mobile Only) -->
+                <div
+                    class="mobile-card-list slds-hide_medium slds-hide_large slds-show_small"
+                >
+                    <div class="mobile-header">
+                        <h2 class="mobile-title">Title</h2>
+                        <button class="mobile-filter-btn">🔍</button>
+                    </div>
+
+                    <template
                         for:each={formattedAssessments}
                         for:item="assessment"
-                        key={assessment.id}
                     >
-                        <td data-label="Assessment Name">
-                            <div class="cell-content">
-                                <strong>{assessment.assessmentName}</strong>
+                        <div key={assessment.id} class="mobile-assessment-card">
+                            <div class="mobile-card-header">
+                                <div class="mobile-icon-container">
+                                    <span class="mobile-assessment-icon"
+                                        >📋</span
+                                    >
+                                </div>
+                                <div
+                                    class="mobile-card-title-section clickable"
+                                    onclick={handleViewAssessment}
+                                    data-id={assessment.id}
+                                >
+                                    <h3 class="mobile-card-title">
+                                        {assessment.assessmentName}
+                                    </h3>
+                                    <p class="mobile-card-subtitle">
+                                        {assessment.associatedCustomer}
+                                    </p>
+                                </div>
+                                <button class="mobile-menu-btn">⋯</button>
                             </div>
-                        </td>
-                        <td data-label="Checklist Name">
-                            <div class="cell-content">
-                                {assessment.checklistName}
-                            </div>
-                        </td>
-                        <td data-label="Associated Customer">
-                            <div class="cell-content">
-                                {assessment.associatedCustomer}
-                            </div>
-                        </td>
-                        <td data-label="Start Date">
-                            <div class="cell-content">
-                                {assessment.formattedStartDate}
-                            </div>
-                        </td>
-                        <td data-label="End Date">
-                            <div class="cell-content">
-                                {assessment.formattedEndDate}
-                            </div>
-                        </td>
-                        <td data-label="Status">
-                            <div class="cell-content">
-                                <span class={assessment.statusClass}>
-                                    {assessment.status}
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
 
-        <div class="footer">
-            <p class="record-count">
-                Showing {formattedAssessments.length} assessments
-            </p>
-        </div>
+                            <div class="mobile-card-body">
+                                <div class="mobile-tags-container">
+                                    <span class="mobile-tag mobile-tag-template"
+                                        >{assessment.checklistName}</span
+                                    >
+                                    <span
+                                        class="mobile-tag-status status-{assessment.statusClass}"
+                                        >{assessment.status}</span
+                                    >
+                                </div>
+
+                                <div class="mobile-date-container">
+                                    <span class="mobile-date-icon">📅</span>
+                                    <span class="mobile-date-text"
+                                        >{assessment.formattedStartDate}</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <div class="mobile-view-more">
+                        <button class="mobile-view-more-btn">View More</button>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <template if:true={hasMultiplePages}>
+                    <div class="pagination-container">
+                        <div class="pagination-info">
+                            <span class="showing-text">{paginationInfo}</span>
+                        </div>
+
+                        <div class="pagination-controls">
+                            <button
+                                class="pagination-btn first-btn"
+                                onclick={handleFirstPage}
+                                disabled={hasPreviousPage}
+                                title="First Page"
+                            >
+                                ⏮
+                            </button>
+
+                            <button
+                                class="pagination-btn prev-btn"
+                                onclick={handlePreviousPage}
+                                disabled={hasPreviousPage}
+                                title="Previous Page"
+                            >
+                                ◀
+                            </button>
+
+                            <div class="page-numbers">
+                                <template
+                                    for:each={pageNumbers}
+                                    for:item="page"
+                                >
+                                    <button
+                                        key={page.number}
+                                        class={page.class}
+                                        data-page={page.number}
+                                        onclick={handlePageClick}
+                                    >
+                                        {page.number}
+                                    </button>
+                                </template>
+                            </div>
+
+                            <button
+                                class="pagination-btn next-btn"
+                                onclick={handleNextPage}
+                                disabled={hasNextPage}
+                                title="Next Page"
+                            >
+                                ▶
+                            </button>
+
+                            <button
+                                class="pagination-btn last-btn"
+                                onclick={handleLastPage}
+                                disabled={hasNextPage}
+                                title="Last Page"
+                            >
+                                ⏭
+                            </button>
+                        </div>
+
+                        <div class="page-size-selector">
+                            <label for="pageSize">Items per page:</label>
+                            <select
+                                id="pageSize"
+                                value={pageSize}
+                                onchange={handlePageSizeChange}
+                            >
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                    </div>
+                </template>
+            </template>
+        </template>
+        <!-- Create Assessment Modal -->
+        <template if:true={showCreateModal}>
+            <div class="modal-backdrop" onclick={handleCloseModal}>
+                <div class="modal-container" onclick={handleModalContentClick}>
+                    <div class="modal-header">
+                        <h2 class="modal-title">✨ Create New Assessment</h2>
+                        <button
+                            class="modal-close-btn"
+                            onclick={handleCloseModal}
+                            title="Close"
+                        >
+                            ×
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form class="assessment-form">
+                            <div class="form-section">
+                                <h3 class="section-title">
+                                    📋 Basic Information
+                                </h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label
+                                            for="assessmentName"
+                                            class="form-label"
+                                            >Assessment Name</label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="assessmentName"
+                                            class="form-input"
+                                            placeholder="Enter a descriptive name for your assessment"
+                                            value={newAssessment.assessmentName}
+                                            onchange={handleInputChange}
+                                            data-field="assessmentName"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label
+                                            for="checklistName"
+                                            class="form-label"
+                                            >Checklist Template</label
+                                        >
+                                        <template if:true={isLoadingPicklists}>
+                                            <div
+                                                class="loading-spinner-small"
+                                            ></div>
+                                        </template>
+                                        <template if:true={picklistError}>
+                                            <div class="error-message-small">
+                                                {picklistError}
+                                            </div>
+                                        </template>
+                                        <select
+                                            id="checklistName"
+                                            class="form-select"
+                                            value={newAssessment.checklistName}
+                                            onchange={handleInputChange}
+                                            data-field="checklistName"
+                                            required
+                                            disabled={isLoadingPicklists}
+                                        >
+                                            <option value="">
+                                                🔽 Choose a checklist template
+                                            </option>
+                                            <template
+                                                for:each={checklistTemplateOptions}
+                                                for:item="option"
+                                            >
+                                                <option
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.icon} {option.label}
+                                                </option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h3 class="section-title">
+                                    🏢 Customer & Categorization
+                                </h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label
+                                            for="associatedCustomer"
+                                            class="form-label"
+                                            >Associated Customer</label
+                                        >
+                                        <template if:true={isLoadingPicklists}>
+                                            <div
+                                                class="loading-spinner-small"
+                                            ></div>
+                                        </template>
+                                        <template if:true={picklistError}>
+                                            <div class="error-message-small">
+                                                {picklistError}
+                                            </div>
+                                        </template>
+                                        <select
+                                            id="associatedCustomer"
+                                            class="form-select"
+                                            value={newAssessment.associatedCustomer}
+                                            onchange={handleInputChange}
+                                            data-field="associatedCustomer"
+                                            required
+                                            disabled={isLoadingPicklists}
+                                        >
+                                            <option value="">
+                                                🏢 Select a customer
+                                            </option>
+                                            <template
+                                                for:each={associatedCustomerOptions}
+                                                for:item="option"
+                                            >
+                                                <option
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </option>
+                                            </template>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="category" class="form-label"
+                                            >Category</label
+                                        >
+                                        <select
+                                            id="category"
+                                            class="form-select"
+                                            value={newAssessment.category}
+                                            onchange={handleInputChange}
+                                            data-field="category"
+                                            required
+                                        >
+                                            <option value="">
+                                                Select a category
+                                            </option>
+                                            <template
+                                                for:each={categoryOptions}
+                                                for:item="option"
+                                            >
+                                                <option
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h3 class="section-title">
+                                    📅 Timeline & Scheduling
+                                </h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label
+                                            for="startDate"
+                                            class="form-label"
+                                            >Start Date</label
+                                        >
+                                        <input
+                                            type="date"
+                                            id="startDate"
+                                            class="form-input date-input"
+                                            value={newAssessment.startDate}
+                                            onchange={handleInputChange}
+                                            data-field="startDate"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="endDate" class="form-label"
+                                            >End Date</label
+                                        >
+                                        <input
+                                            type="date"
+                                            id="endDate"
+                                            class="form-input date-input"
+                                            value={newAssessment.endDate}
+                                            onchange={handleInputChange}
+                                            data-field="endDate"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label
+                                            for="frequency"
+                                            class="form-label"
+                                            >Frequency</label
+                                        >
+                                        <select
+                                            id="frequency"
+                                            class="form-select"
+                                            value={newAssessment.frequency}
+                                            onchange={handleInputChange}
+                                            data-field="frequency"
+                                            required
+                                        >
+                                            <option value="">
+                                                Select a frequency
+                                            </option>
+                                            <template
+                                                for:each={frequencyOptions}
+                                                for:item="option"
+                                            >
+                                                <option
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </option>
+                                            </template>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="status" class="form-label"
+                                            >Initial Status</label
+                                        >
+                                        <select
+                                            id="status"
+                                            class="form-select"
+                                            value={newAssessment.status}
+                                            onchange={handleInputChange}
+                                            data-field="status"
+                                        >
+                                            <option value="Not Started">
+                                                🚀 Not Started
+                                            </option>
+                                            <option value="Pending">
+                                                ⏳ Pending
+                                            </option>
+                                            <option value="In Progress">
+                                                🔄 In Progress
+                                            </option>
+                                            <option value="Completed">
+                                                ✅ Completed
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h3 class="section-title">
+                                    📝 Additional Details
+                                </h3>
+                                <div class="form-group full-width">
+                                    <label for="description" class="form-label"
+                                        >Description</label
+                                    >
+                                    <textarea
+                                        id="description"
+                                        class="form-textarea"
+                                        placeholder="Provide a detailed description of this assessment's purpose, scope, and objectives..."
+                                        value={newAssessment.description}
+                                        onchange={handleInputChange}
+                                        data-field="description"
+                                        rows="4"
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn-secondary"
+                            onclick={handleCloseModal}
+                        >
+                            <span class="btn-icon">❌</span>
+                            Cancel
+                        </button>
+                        <button
+                            type="button"
+                            class="btn-primary"
+                            onclick={handleSaveAssessment}
+                            disabled={isFormInvalid}
+                        >
+                            <span class="btn-icon">✨</span>
+                            Create Assessment
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </template>
     </div>
 </template>

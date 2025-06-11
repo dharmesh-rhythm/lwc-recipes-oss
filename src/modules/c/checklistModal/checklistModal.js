@@ -1,6 +1,8 @@
 //checklistModal.js
 import { LightningElement, track } from 'lwc';
 import { isOnline } from 'c/utils';
+import { STORE_NAMES } from 'c/utils';
+import { saveOfflineAndQueue } from 'c/offlineService';
 
 // Endpoints for getting users and assessment types
 const USERS_ENDPOINT =
@@ -10,14 +12,15 @@ const ASSESSMENT_TYPES_ENDPOINT =
 
 const STATUS_OPTIONS = [
     { label: 'Draft', value: 'Draft' },
-    { label: 'Final', value: 'Final' },
-    { label: 'Archived', value: 'Archived' }
+    { label: 'Active', value: 'Active' },
+    { label: 'Inactive', value: 'Inactive' }
 ];
 
 const CATEGORY_OPTIONS = [
-    { label: 'General', value: 'general' },
-    { label: 'Safety', value: 'safety' },
-    { label: 'Compliance', value: 'compliance' }
+    { label: 'Assessments', value: 'Assessments' },
+    { label: 'RFX', value: 'RFX' },
+    { label: 'Surveys', value: 'Surveys' },
+    { label: 'Critical/Crisis events', value: 'Critical/Crisis eventse' }
 ];
 
 export default class ChecklistModal extends LightningElement {
@@ -118,19 +121,49 @@ export default class ChecklistModal extends LightningElement {
         return valid;
     }
 
-    handleSave(event) {
-        event.preventDefault();
-        if (this.validate()) {
-            // TODO: Save logic
+    async handleSave() {
+        if (!this.validate()) return;
+
+        try {
+            if (!isOnline()) {
+                console.warn('📴 Offline – saving locally');
+                await saveOfflineAndQueue(
+                    STORE_NAMES.CHECKLISTS,
+                    'CREATE_CHECKLIST',
+                    this.form
+                );
+                this.closeModal();
+            }
+
+            // 🌐 Online: call your API/backend
+
             this.closeModal();
+        } catch (err) {
+            console.error('❌ Save failed:', err);
+            // alert('Save failed. Please try again or check connectivity.');
         }
     }
 
-    handleSaveAndNew(event) {
-        event.preventDefault();
-        if (this.validate()) {
-            // TODO: Save logic
-            this.resetForm();
+    async handleSaveAndNew() {
+        if (!this.validate()) return;
+
+        try {
+            if (!isOnline()) {
+                console.warn('📴 Offline – saving locally');
+                await saveOfflineAndQueue(
+                    STORE_NAMES.CHECKLISTS,
+                    'CREATE_CHECKLIST',
+                    this.form
+                );
+                this.closeModal();
+            }
+
+            // 🌐 Online: call your API/backend
+            // await apiCreateChecklist(this.form);
+            this.closeModal();
+        } catch (err) {
+            console.error('❌ Save failed:', err);
+            // alert('Save failed. Please try again or check connectivity.');
         }
     }
 
@@ -175,7 +208,7 @@ export default class ChecklistModal extends LightningElement {
 
         // In a real app, you would have a proper OAuth flow
         const sessionId =
-            '00D7z00000P3CKp!AQEAQFKwmwBkDRjyqOFqec8P6JFs.lSfwBSthHyGfPUCPpJN2vUXUz6QE4UUMIAViND2smQ0Pwb2JY0vWTGLNsSW_sx8W1.Z';
+            '00D7z00000P3CKp!AQEAQGSNaMfLNbnlNRboHASSwSmukK7U8rXWt_oczvIGeWu2vIVDhORo.ID1bpF6SWVy.zZWiLp6G3BqzsWa4ai8wqRe9FSl';
         const headers = {
             Authorization: `Bearer ${sessionId}`,
             'Content-Type': 'application/json'
@@ -210,8 +243,6 @@ export default class ChecklistModal extends LightningElement {
         this.isLoading = true;
 
         if (!isOnline()) {
-            this.error =
-                'You are currently offline. Cannot fetch assessment types.';
             this.isLoading = false;
             this.loadSampleAssessmentTypes();
             return;
@@ -219,7 +250,7 @@ export default class ChecklistModal extends LightningElement {
 
         // In a real app, you would have a proper OAuth flow
         const sessionId =
-            '00D7z00000P3CKp!AQEAQFKwmwBkDRjyqOFqec8P6JFs.lSfwBSthHyGfPUCPpJN2vUXUz6QE4UUMIAViND2smQ0Pwb2JY0vWTGLNsSW_sx8W1.Z';
+            '00D7z00000P3CKp!AQEAQGSNaMfLNbnlNRboHASSwSmukK7U8rXWt_oczvIGeWu2vIVDhORo.ID1bpF6SWVy.zZWiLp6G3BqzsWa4ai8wqRe9FSl';
         const headers = {
             Authorization: `Bearer ${sessionId}`,
             'Content-Type': 'application/json'

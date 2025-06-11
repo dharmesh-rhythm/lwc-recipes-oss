@@ -1,0 +1,26 @@
+<template>
+    <div class="assessment-container">
+        <!-- Banner header section -->
+        <c-assessment-banner
+            title="Assessment 16-05"
+            label="ASSESSMENTS"
+            ondelete={handleDelete}
+        ></c-assessment-banner>
+
+        <!-- Main content section -->
+        <div class="slds-grid slds-grid_vertical-stretch assessment-page">
+            <div class="slds-col sidebar-wrapper">
+                <c-assessment-sidebar
+                    onselectedtabchange={handleTabChange}
+                ></c-assessment-sidebar>
+            </div>
+            <div class="slds-col details-wrapper">
+                <c-assessment-details
+                    selected-tab={selectedTab}
+                    record-id={recordId}
+                    selected-sidebar-tab={selectedSidebarTab}
+                ></c-assessment-details>
+            </div>
+        </div>
+    </div>
+</template>

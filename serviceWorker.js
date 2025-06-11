@@ -1,58 +1,30 @@
 /**
- * Service Worker for LWC OSS Mobile Application
- * Handles caching and offline capability using Workbox
+ * Production Service Worker for LWC OSS App
+ * Features:
+ * - Precache assets using Workbox injectManifest
+ * - Runtime caching for styles, scripts, images, fonts
+ * - Network-first for HTML navigation and API calls
+ * - Offline fallback for HTML
+ * - Background sync + push notifications
  */
 
 importScripts(
     'https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox-sw.js'
 );
 
-// Use Workbox's debug mode in development only
-// self.workbox.setConfig({ debug: true });
-
-// Service worker version - increment this when service worker logic changes
-const CACHE_VERSION = 'v3';
-const STATIC_CACHE_NAME = `lwc-oss-static-${CACHE_VERSION}`;
-const DYNAMIC_CACHE_NAME = `lwc-oss-dynamic-${CACHE_VERSION}`;
-
-// Assets to cache immediately when service worker is installed
-const STATIC_ASSETS = [
-    '/',
-    '/index.html',
-    '/favicon.ico',
-    '/assets/css/main.css',
-    '/assets/css/normalize.css',
-    '/assets/icons/standard-sprite/svg/symbols.svg',
-    '/assets/icons/utility-sprite/svg/symbols.svg',
-    '/lwc.js',
-    '/assets/offline.html',
-    '/assets/images/android-chrome-192x192.png',
-    '/assets/images/android-chrome-512x512.png',
-    '/assets/images/apple-touch-icon.png',
-    '/assets/site.webmanifest'
-];
-
-// Wait for the workbox to be ready
+// Enable Workbox only if loaded correctly
 if (typeof workbox !== 'undefined') {
-    console.log(`Workbox is loaded`);
+    console.log('[SW] Workbox loaded');
 
-    // Set up workbox precaching
-    workbox.precaching.precacheAndRoute(
-        STATIC_ASSETS.map((url) => ({
-            url,
-            revision: CACHE_VERSION
-        }))
-    );
+    // Injected by Workbox CLI based on workbox-config.js
+    workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
 
-    // Use cache-first strategy for static assets
+    // Runtime cache: static assets (style, script, image, font)
     workbox.routing.registerRoute(
         ({ request }) =>
-            request.destination === 'style' ||
-            request.destination === 'script' ||
-            request.destination === 'image' ||
-            request.destination === 'font',
+            ['style', 'script', 'image', 'font'].includes(request.destination),
         new workbox.strategies.CacheFirst({
-            cacheName: STATIC_CACHE_NAME,
+            cacheName: 'lwc-oss-static-v1',
             plugins: [
                 new workbox.expiration.ExpirationPlugin({
                     maxEntries: 60,
@@ -62,12 +34,12 @@ if (typeof workbox !== 'undefined') {
         })
     );
 
-    // Use network-first for HTML documents
+    // Runtime cache: HTML (navigation requests)
     workbox.routing.registerRoute(
         ({ request }) =>
             request.mode === 'navigate' || request.destination === 'document',
         new workbox.strategies.NetworkFirst({
-            cacheName: DYNAMIC_CACHE_NAME,
+            cacheName: 'lwc-oss-pages-v1',
             plugins: [
                 new workbox.expiration.ExpirationPlugin({
                     maxEntries: 50,
@@ -77,11 +49,11 @@ if (typeof workbox !== 'undefined') {
         })
     );
 
-    // API requests - network first
+    // Runtime cache: API calls (network-first)
     workbox.routing.registerRoute(
-        ({ url }) => url.pathname.includes('/api/'),
+        ({ url }) => url.pathname.startsWith('/api/'),
         new workbox.strategies.NetworkFirst({
-            cacheName: 'api-cache',
+            cacheName: 'lwc-oss-api-cache',
             plugins: [
                 new workbox.expiration.ExpirationPlugin({
                     maxEntries: 100,
@@ -94,156 +66,33 @@ if (typeof workbox !== 'undefined') {
         })
     );
 
-    // Default fallback for other requests - network with cache fallback
-    workbox.routing.setDefaultHandler(
-        new workbox.strategies.NetworkFirst({
-            cacheName: DYNAMIC_CACHE_NAME
-        })
-    );
-
-    // Fallback for navigation requests
-    workbox.routing.setCatchHandler(({ event }) => {
+    // Catch handler for offline fallback
+    workbox.routing.setCatchHandler(async ({ event }) => {
         if (event.request.destination === 'document') {
             return caches.match('/assets/offline.html');
         }
         return Response.error();
     });
+
+    // Default handler
+    workbox.routing.setDefaultHandler(
+        new workbox.strategies.NetworkFirst({
+            cacheName: 'lwc-oss-dynamic-v1'
+        })
+    );
 } else {
-    console.log(
-        `Workbox didn't load, falling back to traditional service worker`
-    );
-
-    // Install event handler - cache static assets (fallback)
-    self.addEventListener('install', (event) => {
-        console.log('[Service Worker] Installing Service Worker...', event);
-
-        event.waitUntil(
-            caches
-                .open(STATIC_CACHE_NAME)
-                .then((cache) => {
-                    console.log('[Service Worker] Precaching App Shell');
-                    return cache.addAll(STATIC_ASSETS);
-                })
-                .then(() => {
-                    console.log('[Service Worker] Precaching completed');
-                    return self.skipWaiting(); // Ensure the new service worker activates immediately
-                })
-        );
-    });
-
-    // Activate event handler - clean up old caches (fallback)
-    self.addEventListener('activate', (event) => {
-        console.log('[Service Worker] Activating Service Worker...', event);
-
-        event.waitUntil(
-            caches
-                .keys()
-                .then((keyList) => {
-                    return Promise.all(
-                        keyList.map((key) => {
-                            if (
-                                key !== STATIC_CACHE_NAME &&
-                                key !== DYNAMIC_CACHE_NAME
-                            ) {
-                                console.log(
-                                    '[Service Worker] Removing old cache',
-                                    key
-                                );
-                                return caches.delete(key);
-                            }
-                            return Promise.resolve();
-                        })
-                    );
-                })
-                .then(() => {
-                    console.log('[Service Worker] Claiming clients');
-                    return self.clients.claim(); // Take control of all clients
-                })
-        );
-    });
-
-    // Fetch event handler - serve from cache or network (fallback)
-    self.addEventListener('fetch', (event) => {
-        // Skip non-GET requests
-        if (event.request.method !== 'GET') return;
-
-        // Skip browser-extension requests and non-http(s) requests
-        if (!event.request.url.startsWith('http')) return;
-
-        // Handle API requests differently
-        if (event.request.url.includes('/api/')) {
-            handleApiRequest(event);
-            return;
-        }
-
-        // For static assets, use cache-first strategy
-        event.respondWith(
-            caches.match(event.request).then((response) => {
-                if (response) {
-                    // Found in cache
-                    return response;
-                }
-
-                // Not in cache, fetch from network
-                return fetch(event.request)
-                    .then((networkResponse) => {
-                        // Clone the response as it can only be consumed once
-                        const responseToCache = networkResponse.clone();
-
-                        // Cache the fetched resource if it's a valid response
-                        if (networkResponse.status === 200) {
-                            caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
-                                cache.put(event.request, responseToCache);
-                            });
-                        }
-
-                        return networkResponse;
-                    })
-                    .catch((err) => {
-                        console.error('[Service Worker] Fetch failed:', err);
-                        // If it's an HTML request, return the offline page
-                        if (
-                            event.request.headers.get('accept') &&
-                            event.request.headers
-                                .get('accept')
-                                .includes('text/html')
-                        ) {
-                            return caches.match('/assets/offline.html');
-                        }
-                        return Promise.reject(err);
-                    });
-            })
-        );
-    });
+    console.warn('[SW] Workbox failed to load.');
 }
 
-// Handle API requests with network-first strategy
-function handleApiRequest(event) {
-    event.respondWith(
-        fetch(event.request)
-            .then((response) => {
-                return response;
-            })
-            .catch((err) => {
-                console.log(
-                    '[Service Worker] API fetch failed, serving from cache',
-                    err
-                );
-                return caches.match(event.request);
-            })
-    );
-}
-
-// Background sync for pending operations
+/**
+ * Background Sync for pending operations (like offline form submissions)
+ */
 self.addEventListener('sync', (event) => {
-    console.log('[Service Worker] Background Sync', event);
-
+    console.log('[SW] Background sync triggered:', event.tag);
     if (event.tag === 'sync-pending-operations') {
         event.waitUntil(
-            // Send message to clients to perform sync
             self.clients.matchAll().then((clients) => {
-                if (clients && clients.length) {
-                    // Send to the first active client
+                if (clients.length > 0) {
                     clients[0].postMessage({
                         type: 'SYNC_FROM_SERVICE_WORKER'
                     });
@@ -254,14 +103,23 @@ self.addEventListener('sync', (event) => {
     }
 });
 
-// Push notification handler
+/**
+ * Push Notification Support
+ */
 self.addEventListener('push', (event) => {
-    console.log('[Service Worker] Push Notification received', event);
+    console.log('[SW] Push received:', event);
 
-    let data = { title: 'New Notification', body: 'Something new happened!' };
+    let data = {
+        title: 'Notification',
+        body: 'You have a new message.'
+    };
 
     if (event.data) {
-        data = JSON.parse(event.data.text());
+        try {
+            data = JSON.parse(event.data.text());
+        } catch (e) {
+            console.error('[SW] Failed to parse push payload:', e);
+        }
     }
 
     const options = {

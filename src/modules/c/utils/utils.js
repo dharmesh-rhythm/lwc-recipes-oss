@@ -1,8 +1,10 @@
 /**
  * Reduces one or more errors into a string[] of error messages.
+ *
  * @param {Error|Error[]} errors
  * @return {String[]} Error messages
  */
+// import { syncCREATE_ASSESSMENT } from './asset/js/syncHandlers';
 export function reduceErrors(errors) {
     if (!Array.isArray(errors)) {
         errors = [errors];
@@ -35,6 +37,27 @@ export function reduceErrors(errors) {
             .filter((message) => !!message)
     );
 }
+
+// export async function debugSyncAssessments() {
+//     const operations = await getPendingOperations();
+//     const assessmentOps = operations.filter(op => op.type === 'CREATE_ASSESSMENT');
+
+//     if (!assessmentOps.length) {
+//         console.log('✅ No pending CREATE_ASSESSMENT ops to sync');
+//         return;
+//     }
+
+//     for (const op of assessmentOps) {
+//         try {
+//             console.log(`🔄 Syncing op ${op.id}`, op.data);
+//             await syncCREATE_ASSESSMENT(op.data);
+//             await deletePendingOperation(op.id);
+//             console.log(`✅ Synced & removed operation ${op.id}`);
+//         } catch (err) {
+//             console.error(`❌ Failed to sync op ${op.id}:`, err.message);
+//         }
+//     }
+// }
 
 /**
  * Formats a date string into a more readable format
@@ -69,15 +92,16 @@ export function generateId() {
 // --------------- IndexedDB Storage ---------------
 
 const DB_NAME = 'salesforceOfflineDB';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 export const STORE_NAMES = {
     ACCOUNTS: 'accounts',
     CONTACTS: 'contacts',
-    OPPORTUNITIES: 'opportunities',
-    CASES: 'cases',
-    LEADS: 'leads',
-    ASSESSMENTS: 'assessments',
     CHECKLISTS: 'CHECKLISTS',
+    ASSESSMENTS: 'ASSESSMENTS',
+    LOOKUP: 'LOOKUP_VALUES',
+    FINDINGS: 'FINDINGS',
+    TASKS: 'TASKS',
+    RESPONSES: 'RESPONSES',
     PENDING_OPERATIONS: 'pendingOperations'
 };
 
@@ -104,38 +128,15 @@ function initDB() {
 
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
+            console.log(`⏫ Upgrading IndexedDB to version ${DB_VERSION}`);
 
             // Create object stores for all data types
-            if (!db.objectStoreNames.contains(STORE_NAMES.ACCOUNTS)) {
-                db.createObjectStore(STORE_NAMES.ACCOUNTS, { keyPath: 'id' });
-            }
-
-            if (!db.objectStoreNames.contains(STORE_NAMES.CONTACTS)) {
-                db.createObjectStore(STORE_NAMES.CONTACTS, { keyPath: 'id' });
-            }
-            if (!db.objectStoreNames.contains(STORE_NAMES.CHECKLISTS)) {
-                db.createObjectStore(STORE_NAMES.CHECKLISTS, { keyPath: 'id' }); // ✅ ADD THIS
-            }
-
-            if (!db.objectStoreNames.contains(STORE_NAMES.OPPORTUNITIES)) {
-                db.createObjectStore(STORE_NAMES.OPPORTUNITIES, {
-                    keyPath: 'id'
-                });
-            }
-
-            if (!db.objectStoreNames.contains(STORE_NAMES.CASES)) {
-                db.createObjectStore(STORE_NAMES.CASES, { keyPath: 'id' });
-            }
-
-            if (!db.objectStoreNames.contains(STORE_NAMES.LEADS)) {
-                db.createObjectStore(STORE_NAMES.LEADS, { keyPath: 'id' });
-            }
-
-            if (!db.objectStoreNames.contains(STORE_NAMES.ASSESSMENTS)) {
-                db.createObjectStore(STORE_NAMES.ASSESSMENTS, {
-                    keyPath: 'id'
-                });
-            }
+            Object.values(STORE_NAMES).forEach((store) => {
+                if (!db.objectStoreNames.contains(store)) {
+                    db.createObjectStore(store, { keyPath: 'id' });
+                    console.log(`📦 Created store: ${store}`);
+                }
+            });
 
             // Create object store for pending operations (offline actions)
             if (!db.objectStoreNames.contains(STORE_NAMES.PENDING_OPERATIONS)) {
@@ -229,8 +230,8 @@ export function addPendingOperation(operation) {
         STORE_NAMES.PENDING_OPERATIONS,
         'readwrite',
         (store, resolve) => {
-            const request = store.add(pendingOp);
-            request.onsuccess = () => resolve(pendingOp);
+            store.put(pendingOp); // Always works — adds or overwrites
+            resolve(pendingOp);
         }
     );
 }
@@ -382,4 +383,10 @@ export function removeConnectivityListener(callback) {
         CONNECTIVITY_EVENTS.STATUS_CHANGE,
         callback
     );
+
+    window.offlineUtils = {
+        getPendingOperations,
+        deletePendingOperation,
+        isOnline
+    };
 }

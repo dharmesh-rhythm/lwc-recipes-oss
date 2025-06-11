@@ -23,91 +23,91 @@ export default class ChecklistDemo extends LightningElement {
         console.log('ChecklistDemo initialized');
     }
 
-    initSampleData() {
-        // Get current date and some past dates for the demo
-        const now = new Date();
-        const yesterday = new Date(now);
-        yesterday.setDate(yesterday.getDate() - 1);
+    // initSampleData() {
+    //     // Get current date and some past dates for the demo
+    //     const now = new Date();
+    //     const yesterday = new Date(now);
+    //     yesterday.setDate(yesterday.getDate() - 1);
 
-        const lastWeek = new Date(now);
-        lastWeek.setDate(lastWeek.getDate() - 7);
+    //     const lastWeek = new Date(now);
+    //     lastWeek.setDate(lastWeek.getDate() - 7);
 
-        const twoWeeksAgo = new Date(now);
-        twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+    //     const twoWeeksAgo = new Date(now);
+    //     twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
 
-        // Create sample checklist items
-        this.checklistItems = [
-            {
-                id: 'item1',
-                name: 'SIF Alert',
-                status: 'Completed',
-                category: 'Health & Safety',
-                createdBy: 'John Smith',
-                lastModifiedBy: 'Jane Doe',
-                createdDate: twoWeeksAgo.toISOString(),
-                lastModifiedDate: now.toISOString(),
-                customer: 'Alpha Corporation',
-                occurrence: 'One Time',
-                startDate: '5/1/2025',
-                endDate: '5/31/2025',
-                description: 'description',
-                orgComponent: 'Spare Parts Room'
-            },
-            {
-                id: 'item2',
-                name: 'Checklist 17-B2',
-                status: 'In Progress',
-                category: 'Beta Industries',
-                createdBy: 'Alex Johnson',
-                lastModifiedBy: 'Alex Johnson',
-                createdDate: lastWeek.toISOString(),
-                lastModifiedDate: yesterday.toISOString()
-            },
-            {
-                id: 'item3',
-                name: 'Checklist 18-C4',
-                status: 'Pending',
-                category: 'Gamma Services',
-                createdBy: 'Sarah Williams',
-                lastModifiedBy: 'Mike Brown',
-                createdDate: lastWeek.toISOString(),
-                lastModifiedDate: lastWeek.toISOString()
-            },
-            {
-                id: 'item4',
-                name: 'Checklist 19-D7',
-                status: 'Blocked',
-                category: 'Delta Tech',
-                createdBy: 'David Wilson',
-                lastModifiedBy: 'David Wilson',
-                createdDate: yesterday.toISOString(),
-                lastModifiedDate: lastWeek.toISOString()
-            },
-            {
-                id: 'item5',
-                name: 'Checklist 20-E9',
-                status: 'Pending',
-                category: 'Epsilon Solutions',
-                createdBy: 'Emily Taylor',
-                lastModifiedBy: 'John Smith',
-                createdDate: yesterday.toISOString(),
-                lastModifiedDate: yesterday.toISOString()
-            },
-            {
-                id: 'item6',
-                name: 'Checklist 21-F3',
-                status: 'In Progress',
-                category: 'Zeta Consulting',
-                createdBy: 'Mike Brown',
-                lastModifiedBy: 'Alex Johnson',
-                createdDate: now.toISOString(),
-                lastModifiedDate: now.toISOString()
-            }
-        ];
+    //     // Create sample checklist items
+    //     this.checklistItems = [
+    //         {
+    //             id: 'item1',
+    //             name: 'SIF Alert',
+    //             status: 'Completed',
+    //             category: 'Health & Safety',
+    //             createdBy: 'John Smith',
+    //             lastModifiedBy: 'Jane Doe',
+    //             createdDate: twoWeeksAgo.toISOString(),
+    //             lastModifiedDate: now.toISOString(),
+    //             customer: 'Alpha Corporation',
+    //             occurrence: 'One Time',
+    //             startDate: '5/1/2025',
+    //             endDate: '5/31/2025',
+    //             description: 'description',
+    //             orgComponent: 'Spare Parts Room'
+    //         },
+    //         {
+    //             id: 'item2',
+    //             name: 'Checklist 17-B2',
+    //             status: 'In Progress',
+    //             category: 'Beta Industries',
+    //             createdBy: 'Alex Johnson',
+    //             lastModifiedBy: 'Alex Johnson',
+    //             createdDate: lastWeek.toISOString(),
+    //             lastModifiedDate: yesterday.toISOString()
+    //         },
+    //         {
+    //             id: 'item3',
+    //             name: 'Checklist 18-C4',
+    //             status: 'Pending',
+    //             category: 'Gamma Services',
+    //             createdBy: 'Sarah Williams',
+    //             lastModifiedBy: 'Mike Brown',
+    //             createdDate: lastWeek.toISOString(),
+    //             lastModifiedDate: lastWeek.toISOString()
+    //         },
+    //         {
+    //             id: 'item4',
+    //             name: 'Checklist 19-D7',
+    //             status: 'Blocked',
+    //             category: 'Delta Tech',
+    //             createdBy: 'David Wilson',
+    //             lastModifiedBy: 'David Wilson',
+    //             createdDate: yesterday.toISOString(),
+    //             lastModifiedDate: lastWeek.toISOString()
+    //         },
+    //         {
+    //             id: 'item5',
+    //             name: 'Checklist 20-E9',
+    //             status: 'Pending',
+    //             category: 'Epsilon Solutions',
+    //             createdBy: 'Emily Taylor',
+    //             lastModifiedBy: 'John Smith',
+    //             createdDate: yesterday.toISOString(),
+    //             lastModifiedDate: yesterday.toISOString()
+    //         },
+    //         {
+    //             id: 'item6',
+    //             name: 'Checklist 21-F3',
+    //             status: 'In Progress',
+    //             category: 'Zeta Consulting',
+    //             createdBy: 'Mike Brown',
+    //             lastModifiedBy: 'Alex Johnson',
+    //             createdDate: now.toISOString(),
+    //             lastModifiedDate: now.toISOString()
+    //         }
+    //     ];
 
-        // Store the original items for filtering
-        this.originalChecklistItems = [...this.checklistItems];
-    }
+    //     // Store the original items for filtering
+    //     this.originalChecklistItems = [...this.checklistItems];
+    // }
 
     handleAddItem() {
         // Sample data for random selection
